@@ -209,7 +209,7 @@ namespace Eco_Matic_Winforms
             btnBack.TabIndex = 5;
             btnBack.Text = "BACK";
             btnBack.UseVisualStyleBackColor = false;
-            btnBack.Click += btnBack2_Click;
+            btnBack.Click += btnBack_Click;
             // 
             // AdminForm
             // 

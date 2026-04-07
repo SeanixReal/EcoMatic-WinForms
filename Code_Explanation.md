@@ -1,53 +1,103 @@
 # Eco-Matic Vending Machine: Code Logic Explanation
 
-This document explains the logic behind the key components of the Eco-Matic Vending Machine application.
+This file explains the current code in simple words.
 
-## 1. DataStore.cs (The "Database")
-This class acts as the central memory of the application. It is `static`, meaning it stays alive and keeps its data as long as the application is running.
-- **Products**: A list that holds all available items, their prices, and current stock. It is initialized in the `static constructor` with 15 default items.
-- **Transactions**: A list that records every purchase made.
-- **GetReadmePath()**: A helper method that searches for the README file so it can be opened from the menu.
+## 1. Program.cs
 
-## 2. Product.cs & Transaction.cs (Data Models)
-These classes define the structure of the data.
-- **Product**: Represents a single item with an ID, Name, Price, and Stock count.
-- **Transaction**: Represents a completed purchase, including the total amount, amount paid, change, and a list of bought items (**TransactionItem**).
+`Program.cs` is the app entry point.
+It starts the WinForms app and opens `MainForm`.
 
-## 3. CustomerForm.cs (The Buying Interface)
-This is the main screen for customers.
-- **_cartDictionary**: Tracks what the user wants to buy (Product ID -> Quantity).
-- **_insertedMoney**: Tracks how much money the user has "inserted".
-- **RefreshProducts()**: Dynamically creates buttons for each product. If stock is 0, it disables the button and shows "SOLD OUT".
-- **ProductCard_Click**: Logic for adding items to the cart. It checks if there is enough stock before adding.
-- **BtnMoney_Click**: Logic for the money buttons. Adds the face value (e.g., 20, 50, 100) to `_insertedMoney`.
-- **btnPurchase_Click**: The core algorithm:
-    1. Calculates the total price of items in the cart.
-    2. Checks if `_insertedMoney` is greater than or equal to the total.
-    3. If valid, it subtracts stock from the `DataStore` for each item.
-    4. Creates a new `Transaction` record.
-    5. Shows a success message and closes the form.
+## 2. Data Models
 
-## 4. AdminForm.cs (Inventory Management)
-This screen allows the admin to restock items.
-- **OnLoad**: ensures data is loaded only when the form runs (not in the visual designer).
-- **RefreshGrid()**: Loads the current inventory from `DataStore` into the table. It highlights items with low stock (<= 2) in red.
-- **btnUpdate_Click**: Finds the selected product and adds the specified quantity to its `Stock`.
+### Product.cs
 
-## 5. MainForm.cs (Authentication & Navigation)
-The entry point of the visual application.
-- **btnCustomer_Click**: Opens the Customer interface.
-- **btnAdmin_Click**: Uses `LoginForm` to securely check the password. If correct (`"admin123"`), it opens the Admin interface.
-- **btnExit_Click**: If a purchase was just made, it shows the **ReceiptForm** before closing the application.
+`Product` stores item information:
 
-## 6. ReceiptForm.cs (Print Output)
-Displays the details of the last transaction.
-- **PopulateReceipt()**: Loops through the items in the transaction and creates labels to display name, quantity, and price. It also shows the final math (Total, Paid, Change).
+1. `Id`
+2. `Name`
+3. `Price`
+4. `Stock`
 
-## 7. LoginForm.cs (Admin Security)
-A dedicated window for entering the admin password.
-- **Password Property**: Allows `MainForm` to retrieve what the user typed.
-- **DialogResult**: Sets result to `OK` only if the user clicks Login, otherwise `Cancel`.
+### Transaction.cs
 
-## 8. ReadmeForm.cs (Help Viewer)
-A dedicated window for viewing the README.md content.
-- **Constructor**: Takes the text content as a parameter and displays it in a read-only text box.
+`TransactionItem` is one item line in a purchase.
+`Transaction` is the full purchase record.
+
+`Transaction` contains:
+
+1. Transaction ID and date
+2. Purchased item list
+3. Total, paid amount, and change
+
+## 3. DataStore.cs
+
+`DataStore` is a static class used as in-memory storage for Increment 1.
+
+It stores:
+
+1. `Products`
+2. `Transactions`
+3. `NextTransactionId`
+4. `LastTransaction`
+
+Important: data resets when the app closes.
+
+## 4. MainForm.cs
+
+`MainForm` is the home screen.
+
+Main actions:
+
+1. Open customer screen
+2. Open admin login and admin screen
+3. Exit app
+4. Show receipt before exit when a transaction exists
+
+## 5. LoginForm.cs
+
+`LoginForm` collects admin password input.
+It returns `OK` or `Cancel` using `DialogResult`.
+
+## 6. CustomerForm.cs
+
+`CustomerForm` handles buying flow.
+
+Main logic:
+
+1. Load products as clickable buttons
+2. Add selected products to cart
+3. Add money using denomination buttons
+4. Compute total and change
+5. Validate cart and payment
+6. Create transaction and reduce stock on successful purchase
+
+## 7. AdminForm.cs
+
+`AdminForm` handles restocking.
+
+Main logic:
+
+1. Show inventory in grid
+2. Highlight low stock (<= 2) in red
+3. Select item and quantity
+4. Update stock and refresh the grid
+
+## 8. ReceiptForm.cs
+
+`ReceiptForm` shows summary of the last purchase.
+
+It displays:
+
+1. Purchased item lines
+2. Total amount
+3. Paid amount
+4. Change
+
+## 9. ReadmeForm.cs
+
+`ReadmeForm` shows built-in usage/help text inside the app.
+
+## 10. Increment 2 Note
+
+For Increment 1, storage is in-memory only.
+For Increment 2, MySQL database integration will be implemented.

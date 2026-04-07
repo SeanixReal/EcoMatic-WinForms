@@ -4,6 +4,8 @@ namespace Eco_Matic_Winforms
 {
     public partial class MainForm : Form
     {
+        private const string AdminPassword = "admin123";
+
         public MainForm()
         {
             InitializeComponent();
@@ -41,7 +43,7 @@ namespace Eco_Matic_Winforms
             using var login = new LoginForm();
             if (login.ShowDialog(this) == DialogResult.OK)
             {
-                if (login.Password == "admin123")
+                if (login.Password == AdminPassword)
                 {
                     this.Hide();
                     var adminForm = new AdminForm();

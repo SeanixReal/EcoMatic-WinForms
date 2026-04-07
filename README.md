@@ -4,6 +4,18 @@
 Eco-Matic is a Windows Forms vending machine simulator built with C# and .NET.
 It features a customer purchase interface, admin inventory management, and receipt generation.
 
+## Increment 1 Scope
+
+This increment focuses on:
+
+1. Project setup
+2. UI design
+3. Running program demo
+4. Basic logic for customer purchase and admin restock
+
+Database integration is not part of Increment 1 yet.
+MySQL will be implemented in Increment 2.
+
 ## How to Use
 
 ### Customer Mode
@@ -27,9 +39,23 @@ All prices are in Philippine Peso (₱).
 ## Technical Details
 - **Framework**: .NET with Windows Forms
 - **Language**: C#
-- **Data Storage**: In-memory (resets on app close)
+- **Data Storage**: In-memory using `DataStore` (resets on app close)
 - **Architecture**: Multi-form with shared static DataStore class
 - **Toolbox Controls**: MenuStrip, ContextMenuStrip, Panel, GroupBox, DataGridView
+
+## Documentation
+
+Complete Increment 1 documents and Mermaid diagrams are in:
+
+- `doc/`
+
+That folder includes:
+
+1. Project overview
+2. Architecture and class guide
+3. User flow
+4. MySQL plan for Increment 2
+5. Flowchart, class diagram, and ERD
 
 ## Author
 © 2026 Seanix

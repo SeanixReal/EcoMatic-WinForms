@@ -2,7 +2,7 @@ namespace Eco_Matic_Winforms
 {
     public partial class ReceiptForm : Form
     {
-        private Transaction _transaction;
+        private Transaction? _transaction;
 
         public ReceiptForm()
         {
@@ -17,7 +17,13 @@ namespace Eco_Matic_Winforms
 
         private void PopulateReceipt()
         {
-            if (_transaction == null) return;
+            if (_transaction == null)
+            {
+                lblTotal.Text = "Total:  ₱0.00";
+                lblPaid.Text = "Paid:   ₱0.00";
+                lblChange.Text = "Change: ₱0.00";
+                return;
+            }
 
             int y = 5;
             foreach (var item in _transaction.Items)

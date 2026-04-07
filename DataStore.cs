@@ -1,42 +1,8 @@
 namespace Eco_Matic_Winforms
 {
-    public class Product
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
-    }
-
-    public class TransactionItem
-    {
-        public int ProductId { get; set; }
-        public string ProductName { get; set; } = "";
-        public int Quantity { get; set; }
-        public decimal UnitPrice { get; set; }
-        public decimal LineTotal => Quantity * UnitPrice;
-    }
-
-    public class Transaction
-    {
-        public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public List<TransactionItem> Items { get; set; } = new List<TransactionItem>();
-        public decimal TotalAmount { get; set; }
-        public decimal AmountPaid { get; set; }
-        public decimal Change { get; set; }
-    }
-    
     public static class DataStore
     {
-        public static List<Product> Products { get; set; }
-        public static List<Transaction> Transactions { get; set; }
-        public static int NextTransactionId { get; set; }
-        public static Transaction LastTransaction { get; set; }
-
-        static DataStore()
-        {
-            Products = new List<Product>
+        public static List<Product> Products { get; } = new()
             {
                 new Product { Id = 1,  Name = "Mr Chips", Price = 30.5m, Stock = 10 },
                 new Product { Id = 2,  Name = "Nova", Price = 40m, Stock = 10 },
@@ -54,8 +20,9 @@ namespace Eco_Matic_Winforms
                 new Product { Id = 14, Name = "Zest-O Orange", Price = 15m, Stock = 10 },
                 new Product { Id = 15, Name = "Del Monte Pineapple Juice", Price = 22.5m, Stock = 10 }
             };
-            Transactions = new List<Transaction>();
-            NextTransactionId = 1;
-        }
+
+        public static List<Transaction> Transactions { get; } = new();
+        public static int NextTransactionId { get; set; } = 1;
+        public static Transaction? LastTransaction { get; set; }
     }
 }

@@ -13,13 +13,12 @@ namespace Eco_Matic_Winforms
         {
             base.OnLoad(e);
 
-            RefreshGridUsingArray();   
-            // RefreshGridUsingList();
+            RefreshGrid();
             RefreshCombo();
         }
 
 
-        private void RefreshGridUsingArray()
+        private void RefreshGrid()
         {
             inventoryGrid.Columns.Clear();
             inventoryGrid.Rows.Clear();
@@ -60,47 +59,6 @@ namespace Eco_Matic_Winforms
             }
         }
 
-        private void RefreshGridUsingList()
-        {
-            inventoryGrid.Columns.Clear();
-            inventoryGrid.Rows.Clear();
-
-            // add columns
-            List<string[]> columnDefs = new List<string[]>
-            {
-                new string[] { "Name",  "Item Name"  },
-                new string[] { "Price", "Price (₱)"  },
-                new string[] { "Stock", "Stock"      }
-            };
-
-            foreach (string[] col in columnDefs)
-            {
-                inventoryGrid.Columns.Add(col[0], col[1]);
-            }
-
-            // row
-            List<object[]> rows = new List<object[]>();
-
-            foreach (Product p in DataStore.Products)
-            {
-                rows.Add(new object[] { p.Name, $"₱{p.Price:F2}", p.Stock });
-            }
-
-            // add rows
-            for (int i = 0; i < rows.Count; i++)
-            {
-                int idx = inventoryGrid.Rows.Add(rows[i]);
-
-                // low stock item red
-                if (DataStore.Products[i].Stock <= 2)
-                {
-                    inventoryGrid.Rows[idx].Cells[2].Style.ForeColor = Color.Red;
-                    inventoryGrid.Rows[idx].Cells[2].Style.Font =
-                        new Font("Segoe UI", 10, FontStyle.Bold);
-                }
-            }
-        }
-
         private void RefreshCombo()
         {
             cboItem.Items.Clear();
@@ -115,12 +73,18 @@ namespace Eco_Matic_Winforms
         {
             if (cboItem.SelectedIndex < 0)
             {
-                MessageBox.Show("Please select an item.", "Error",
+                MessageBox.Show("Please select an item from the dropdown first.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string selectedName = cboItem.SelectedItem.ToString();
+            if (cboItem.SelectedItem is not string selectedName)
+            {
+                MessageBox.Show("Selected item is invalid. Please try again.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var product = DataStore.Products.FirstOrDefault(p => p.Name == selectedName);
             if (product == null) return;
 
@@ -130,10 +94,10 @@ namespace Eco_Matic_Winforms
             MessageBox.Show($"{product.Name} restocked by {qty}.\nNew stock: {product.Stock}",
                 "Restock Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            RefreshGridUsingArray(); // Use the same method as OnLoad
+            RefreshGrid();
         }
 
-        private void btnBack2_Click(object sender, EventArgs e) => this.Close();
+        private void btnBack_Click(object sender, EventArgs e) => this.Close();
 
         
         private void backMenuItem_Click(object sender, EventArgs e) => this.Close();

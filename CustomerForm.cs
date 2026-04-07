@@ -20,22 +20,29 @@ namespace Eco_Matic_Winforms
             int[] denominations = { 20, 50, 100, 200, 500, 1000 };
             foreach (int d in denominations)
             {
-                var btn = new Button
-                {
-                    Text = $"₱{d}",
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                    Size = new Size(100, 33),
-                    FlatStyle = FlatStyle.Flat,
-                    BackColor = Color.FromArgb(241, 196, 15),
-                    ForeColor = Color.FromArgb(40, 40, 40),
-                    Cursor = Cursors.Hand,
-                    Tag = d,
-                    Margin = new Padding(2)
-                };
-                btn.FlatAppearance.BorderSize = 0;
-                btn.Click += BtnMoney_Click;
+                var btn = CreateMoneyButton(d);
+                btn.Click += btnMoney_Click;
                 moneyFlow.Controls.Add(btn);
             }
+        }
+
+        private static Button CreateMoneyButton(int amount)
+        {
+            var button = new Button
+            {
+                Text = $"₱{amount}",
+                Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                Size = new Size(100, 33),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.FromArgb(241, 196, 15),
+                ForeColor = Color.FromArgb(40, 40, 40),
+                Cursor = Cursors.Hand,
+                Tag = amount,
+                Margin = new Padding(2)
+            };
+
+            button.FlatAppearance.BorderSize = 0;
+            return button;
         }
 
         private void RefreshProducts()
@@ -76,7 +83,7 @@ namespace Eco_Matic_Winforms
         }
 
         
-        private void ProductCard_Click(object sender, EventArgs e)
+        private void ProductCard_Click(object? sender, EventArgs e)
         {
             if (sender is Button btn && btn.Tag is int productId)
             {
@@ -100,7 +107,7 @@ namespace Eco_Matic_Winforms
             }
         }
 
-        private void BtnMoney_Click(object sender, EventArgs e)
+        private void btnMoney_Click(object? sender, EventArgs e)
         {
             if (sender is Button btn && btn.Tag is int amount)
             {
@@ -123,6 +130,13 @@ namespace Eco_Matic_Winforms
 
         private void btnPurchase_Click(object sender, EventArgs e)
         {
+            if (_cart.Count == 0)
+            {
+                MessageBox.Show("Your cart is empty. Please add at least one item.", "Cart Empty",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             decimal total = GetCartTotal();
             if (_insertedMoney < total)
             {
@@ -250,7 +264,7 @@ namespace Eco_Matic_Winforms
             lblInserted.Text = $"Inserted: ₱{_insertedMoney:F2}";
             decimal change = Math.Max(0, _insertedMoney - total);
             lblChange.Text = $"Change:  ₱{change:F2}";
-            btnPurchase.Enabled = _cart.Count > 0 && _insertedMoney >= total;
+            btnPurchase.Enabled = _cart.Count > 0;
         }
     }
 }
