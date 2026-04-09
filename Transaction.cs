@@ -1,5 +1,28 @@
 namespace Eco_Matic_Winforms
 {
+	public enum RecycleMaterial
+	{
+		Plastic,
+		Glass,
+		Aluminum
+	}
+
+	public class RecycleEntry
+	{
+		public RecycleMaterial Material { get; set; }
+		public decimal WeightKg { get; set; }
+		public decimal CreditPerKg { get; set; }
+		public decimal TotalCredit => WeightKg * CreditPerKg;
+	}
+
+	public class EventLogEntry
+	{
+		public DateTime TimestampUtc { get; set; }
+		public string EventType { get; set; } = string.Empty;
+		public string Details { get; set; } = string.Empty;
+		public decimal Amount { get; set; }
+	}
+
 	public class TransactionItem
 	{
 		public int ProductId { get; set; }
@@ -14,6 +37,7 @@ namespace Eco_Matic_Winforms
 		public int Id { get; set; }
 		public DateTime Date { get; set; }
 		public List<TransactionItem> Items { get; set; } = new();
+		public List<RecycleEntry> RecycledItems { get; set; } = new();
 		public decimal TotalAmount { get; set; }
 		public decimal AmountPaid { get; set; }
 		public decimal Change { get; set; }

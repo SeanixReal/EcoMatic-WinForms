@@ -3,86 +3,133 @@ namespace Eco_Matic_Winforms
     public partial class CustomerForm : Form
     {
         private readonly Dictionary<int, int> _cart = new();
+        private readonly List<RecycleEntry> _recycleEntries = new();
         private decimal _insertedMoney = 0;
 
         public CustomerForm()
         {
             InitializeComponent();
 
-            CreateMoneyButtons();
+            InitializeProductButtons();
+            InitializeSelectors();
             RefreshProducts();
             UpdateCartDisplay();
         }
 
-        
-        private void CreateMoneyButtons()
+        private sealed class ProductOption
         {
-            int[] denominations = { 20, 50, 100, 200, 500, 1000 };
-            foreach (int d in denominations)
-            {
-                var btn = CreateMoneyButton(d);
-                btn.Click += btnMoney_Click;
-                moneyFlow.Controls.Add(btn);
-            }
+            public int Id { get; set; }
+            public string Name { get; set; } = string.Empty;
+            public override string ToString() => Name;
         }
 
-        private static Button CreateMoneyButton(int amount)
+        private void InitializeProductButtons()
         {
-            var button = new Button
+            Button[] buttons =
             {
-                Text = $"₱{amount}",
-                Font = new Font("Segoe UI", 9, FontStyle.Bold),
-                Size = new Size(100, 33),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(241, 196, 15),
-                ForeColor = Color.FromArgb(40, 40, 40),
-                Cursor = Cursors.Hand,
-                Tag = amount,
-                Margin = new Padding(2)
+                btnProd1, btnProd2, btnProd3, btnProd4, btnProd5,
+                btnProd6, btnProd7, btnProd8, btnProd9, btnProd10,
+                btnProd11, btnProd12, btnProd13, btnProd14, btnProd15
             };
 
-            button.FlatAppearance.BorderSize = 0;
-            return button;
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                buttons[i].Tag = i + 1;
+                buttons[i].Click -= ProductCard_Click;
+                buttons[i].Click += ProductCard_Click;
+            }
+
+            btnMoney20.Tag = 20;
+            btnMoney50.Tag = 50;
+            btnMoney100.Tag = 100;
+            btnMoney200.Tag = 200;
+            btnMoney500.Tag = 500;
+            btnMoney1000.Tag = 1000;
+        }
+
+        private void InitializeSelectors()
+        {
+            cboRecycleType.Items.Clear();
+            foreach (var material in Enum.GetValues<RecycleMaterial>())
+            {
+                cboRecycleType.Items.Add(material);
+            }
+
+            if (cboRecycleType.Items.Count > 0)
+            {
+                cboRecycleType.SelectedIndex = 0;
+            }
+
+            nudRecycleQty.Value = 1;
+            RefreshExamineOptions();
+        }
+
+        private void RefreshExamineOptions()
+        {
+            var selectedId = (cboExamineItem.SelectedItem as ProductOption)?.Id;
+            cboExamineItem.Items.Clear();
+
+            foreach (var p in DataStore.Products.OrderBy(p => p.Id))
+            {
+                cboExamineItem.Items.Add(new ProductOption { Id = p.Id, Name = p.Name });
+            }
+
+            if (selectedId.HasValue)
+            {
+                var same = cboExamineItem.Items
+                    .OfType<ProductOption>()
+                    .FirstOrDefault(x => x.Id == selectedId.Value);
+                if (same != null)
+                {
+                    cboExamineItem.SelectedItem = same;
+                    return;
+                }
+            }
+
+            if (cboExamineItem.Items.Count > 0)
+            {
+                cboExamineItem.SelectedIndex = 0;
+            }
         }
 
         private void RefreshProducts()
         {
-            productPanel.Controls.Clear();
-            foreach (var p in DataStore.Products)
+            foreach (var control in productPanel.Controls.OfType<Button>())
             {
-                var card = new Button
+                if (!int.TryParse(control.Tag?.ToString(), out int productId))
                 {
-                    Size = new Size(120, 65),
-                    FlatStyle = FlatStyle.Flat,
-                    Font = new Font("Segoe UI", 8, FontStyle.Bold),
-                    Cursor = Cursors.Hand,
-                    Tag = p.Id,
-                    Margin = new Padding(4),
-                    TextAlign = ContentAlignment.MiddleCenter
-                };
-                card.FlatAppearance.BorderColor = Color.FromArgb(200, 200, 200);
-                card.FlatAppearance.BorderSize = 1;
+                    continue;
+                }
 
-                if (p.Stock > 0)
+                var product = DataStore.Products.FirstOrDefault(p => p.Id == productId);
+                if (product == null)
                 {
-                    card.Text = $"{p.Name}\n₱{p.Price:F2}";
-                    card.BackColor = Color.White;
-                    card.ForeColor = Color.FromArgb(40, 40, 40);
-                    card.Click += ProductCard_Click;
+                    control.Text = "EMPTY\nN/A";
+                    control.Enabled = false;
+                    control.BackColor = Color.FromArgb(220, 220, 220);
+                    control.ForeColor = Color.Gray;
+                    continue;
+                }
+
+                if (product.Stock > 0)
+                {
+                    control.Text = $"{product.Name}\n₱{product.Price:F2} (x{product.Stock})";
+                    control.BackColor = Color.White;
+                    control.ForeColor = Color.FromArgb(40, 40, 40);
+                    control.Enabled = true;
                 }
                 else
                 {
-                    card.Text = $"{p.Name}\nSOLD OUT";
-                    card.BackColor = Color.FromArgb(220, 220, 220);
-                    card.ForeColor = Color.Gray;
-                    card.Enabled = false;
+                    control.Text = $"{product.Name}\nSOLD OUT";
+                    control.BackColor = Color.FromArgb(220, 220, 220);
+                    control.ForeColor = Color.Gray;
+                    control.Enabled = false;
                 }
-
-                productPanel.Controls.Add(card);
             }
+
+            RefreshExamineOptions();
         }
 
-        
         private void ProductCard_Click(object? sender, EventArgs e)
         {
             if (sender is Button btn && btn.Tag is int productId)
@@ -109,7 +156,7 @@ namespace Eco_Matic_Winforms
 
         private void btnMoney_Click(object? sender, EventArgs e)
         {
-            if (sender is Button btn && btn.Tag is int amount)
+            if (sender is Button btn && int.TryParse(btn.Tag?.ToString(), out int amount))
             {
                 _insertedMoney += amount;
                 UpdatePaymentDisplay();
@@ -120,6 +167,8 @@ namespace Eco_Matic_Winforms
         {
             _cart.Clear();
             _insertedMoney = 0;
+            _recycleEntries.Clear();
+            lblRecycleStatus.Text = "";
             UpdateCartDisplay();
         }
 
@@ -169,8 +218,22 @@ namespace Eco_Matic_Winforms
                 product.Stock -= kvp.Value;
             }
 
+            foreach (var recycle in _recycleEntries)
+            {
+                transaction.RecycledItems.Add(new RecycleEntry
+                {
+                    Material = recycle.Material,
+                    WeightKg = recycle.WeightKg,
+                    CreditPerKg = recycle.CreditPerKg
+                });
+            }
+
             DataStore.Transactions.Add(transaction);
             DataStore.LastTransaction = transaction;
+            DataStore.SaveInventory();
+
+            string purchaseDetails = string.Join(", ", transaction.Items.Select(x => $"{x.Quantity}x {x.ProductName}"));
+            DataStore.LogEvent("PURCHASE", purchaseDetails, transaction.TotalAmount);
 
             MessageBox.Show(
                 $"Purchase successful!\nChange: ₱{change:F2}\n\nGet your receipt from the main menu.",
@@ -205,10 +268,76 @@ namespace Eco_Matic_Winforms
         {
             _cart.Clear();
             _insertedMoney = 0;
+            _recycleEntries.Clear();
+            lblRecycleStatus.Text = "";
             UpdateCartDisplay();
         }
 
-        
+        private void btnExamine_Click(object sender, EventArgs e)
+        {
+            if (cboExamineItem.SelectedItem is not ProductOption option)
+            {
+                MessageBox.Show("Select an item to examine.", "Examine Item",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var product = DataStore.Products.FirstOrDefault(p => p.Id == option.Id);
+            if (product == null)
+            {
+                MessageBox.Show("Item is no longer available.", "Examine Item",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                RefreshProducts();
+                return;
+            }
+
+            MessageBox.Show(
+                $"{product.Name}\nType: {product.Type}\nPrice: ₱{product.Price:F2}\nStock: {product.Stock}\n\n{product.Examine()}",
+                "Item Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnRecycle_Click(object sender, EventArgs e)
+        {
+            if (cboRecycleType.SelectedItem is not RecycleMaterial material)
+            {
+                MessageBox.Show("Select a recycle material first.", "Recycle for Credit",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            decimal weightKg = nudRecycleQty.Value;
+            if (weightKg <= 0)
+            {
+                MessageBox.Show("Weight must be greater than 0.", "Recycle for Credit",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            decimal rate = DataStore.RecycleRates[material];
+            decimal credit = rate * weightKg;
+            _insertedMoney += credit;
+
+            var existing = _recycleEntries.FirstOrDefault(x => x.Material == material);
+            if (existing == null)
+            {
+                _recycleEntries.Add(new RecycleEntry
+                {
+                    Material = material,
+                    WeightKg = weightKg,
+                    CreditPerKg = rate
+                });
+            }
+            else
+            {
+                existing.WeightKg += weightKg;
+            }
+
+            DataStore.LogEvent("RECYCLE", $"{weightKg:F2} kg {material}", credit);
+
+            lblRecycleStatus.Text = $"Added ₱{credit:F2} credit";
+            UpdatePaymentDisplay();
+        }
+
         private void backMenuItem_Click(object sender, EventArgs e) => this.Close();
 
         private void howToBuyMenuItem_Click(object sender, EventArgs e)
@@ -217,7 +346,9 @@ namespace Eco_Matic_Winforms
                 "1. Click a product to add it to your cart\n" +
                 "2. Right-click the cart to remove items\n" +
                 "3. Insert money using the bill buttons\n" +
-                "4. Click PURCHASE when ready",
+                "4. Examine products before buying (optional)\n" +
+                "5. Recycle plastic, glass, or aluminum by weight in kg for credit (optional)\n" +
+                "6. Click PURCHASE when ready",
                 "Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -243,7 +374,7 @@ namespace Eco_Matic_Winforms
         private void UpdateCartDisplay()
         {
             cartList.Items.Clear();
-            foreach (var kvp in _cart)
+            foreach (var kvp in _cart.OrderBy(k => k.Key))
             {
                 var product = DataStore.Products.FirstOrDefault(p => p.Id == kvp.Key);
                 if (product != null)
@@ -264,7 +395,7 @@ namespace Eco_Matic_Winforms
             lblInserted.Text = $"Inserted: ₱{_insertedMoney:F2}";
             decimal change = Math.Max(0, _insertedMoney - total);
             lblChange.Text = $"Change:  ₱{change:F2}";
-            btnPurchase.Enabled = _cart.Count > 0;
+            btnPurchase.Enabled = _cart.Count > 0 && _insertedMoney >= total;
         }
     }
 }

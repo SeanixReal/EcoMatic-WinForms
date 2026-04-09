@@ -42,6 +42,22 @@ namespace Eco_Matic_Winforms
                 y += 24;
             }
 
+            foreach (var recycle in _transaction.RecycledItems)
+            {
+                string line = $"Recycle {recycle.Material,-8} {recycle.WeightKg,5:F2}kg +₱{recycle.TotalCredit:F2}";
+                var lbl = new Label
+                {
+                    Text = line,
+                    Font = new Font("Consolas", 10),
+                    ForeColor = Color.FromArgb(39, 174, 96),
+                    AutoSize = false,
+                    Size = new Size(330, 22),
+                    Location = new Point(5, y)
+                };
+                itemsPanel.Controls.Add(lbl);
+                y += 24;
+            }
+
             lblTotal.Text = $"Total:  ₱{_transaction.TotalAmount:F2}";
             lblPaid.Text = $"Paid:   ₱{_transaction.AmountPaid:F2}";
             lblChange.Text = $"Change: ₱{_transaction.Change:F2}";

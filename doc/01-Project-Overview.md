@@ -12,40 +12,41 @@ It has two main sides:
 1. Customer side for buying items
 2. Admin side for checking and restocking inventory
 
-## Scope for Increment 1
+## Scope for Current Build
 
-For Increment 1, the focus is:
+The current build focuses on:
 
-1. Project setup
-2. UI design
-3. Running system demo
-4. Basic working logic for buying and restocking
-5. Basic documentation and diagrams
+1. Designer-based WinForms interface for customer and admin flows
+2. Customer purchase + examine + recycle credit features
+3. Admin restock-to-max, add item, remove item, and log tools
+4. CSV persistence and event logging
+5. Validation constraints for slots and stock
 
 ## Features Implemented
 
 1. Main menu with Customer, Admin, and Exit options
-2. Customer screen with product list and cart
-3. Money insertion buttons and purchase computation
-4. Receipt display after successful transaction
+2. Customer screen with product list, cart, and static money controls
+3. Examine Item and Recycle for Credit actions
+4. Money insertion and purchase computation with validation
+5. Receipt display after successful transaction
 5. Admin login gate
-6. Admin inventory view and restock update
-7. ReadMe/help access from menu
+6. Admin inventory view and restock-to-max update
+7. Add item and remove item admin actions
+8. View and clear event log admin actions
+9. ReadMe/help access from menu
 
-## Out of Scope for Increment 1
+## Out of Scope for Current Build
 
 1. MySQL database
-2. Persistent transaction history after closing app
-3. Advanced reports and analytics
+2. Advanced reports and analytics
 
 ## Tech Stack
 
 1. C#
 2. .NET 10.0 Windows Forms
-3. In-memory storage using lists (`DataStore`)
+3. CSV persistence through `DataStore` + `CsvStorage`
 
 ## Current Limitation
 
-Data is only in memory.
-When the app closes, all current data resets.
-This is acceptable for Increment 1 because database work starts in Increment 2.
+Data is persisted in CSV, not in a relational database.
+MySQL migration remains a future increment.

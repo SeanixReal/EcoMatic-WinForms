@@ -4,17 +4,19 @@
 Eco-Matic is a Windows Forms vending machine simulator built with C# and .NET.
 It features a customer purchase interface, admin inventory management, and receipt generation.
 
-## Increment 1 Scope
+## Current Scope
 
-This increment focuses on:
+This version now includes:
 
-1. Project setup
-2. UI design
-3. Running program demo
-4. Basic logic for customer purchase and admin restock
+1. Designer-first WinForms UI (no runtime-generated customer/admin controls)
+2. Customer purchase flow with cart and payment validation
+3. Examine Item feature with flavor/details text
+4. Recycle for Credit feature (Plastic, Glass, Aluminum)
+5. Admin inventory tools (restock-to-max, add item, remove item)
+6. Event log tools (view and clear log)
+7. CSV persistence for inventory and logs
 
-Database integration is not part of Increment 1 yet.
-MySQL will be implemented in Increment 2.
+MySQL is still planned for a future increment.
 
 ## How to Use
 
@@ -23,25 +25,42 @@ MySQL will be implemented in Increment 2.
 2. Click product buttons to add items to your cart
 3. Right-click the cart to remove items
 4. Insert money using the bill buttons (₱20 – ₱1000)
-5. Click **PURCHASE** when your payment covers the total
-6. Get your receipt from the home page after purchase
+5. (Optional) Use **EXAMINE** to read item details
+6. (Optional) Add balance using **Recycle for Credit**
+7. Click **PURCHASE** when your payment covers the total
+8. Get your receipt from the home page after purchase
 
 ### Admin Mode
 1. Click **ADMIN** on the home page
 2. Enter password: `admin123`
-3. View current inventory in the data grid
-4. Select an item, enter quantity, and click **UPDATE STOCK** to restock
+3. View inventory in the data grid
+4. Restock an item directly to max stock
+5. Add a new item with type/price/stock/description
+6. Remove an existing item
+7. View event logs
+8. Clear event logs with confirmation
 
-## Products
-The machine is stocked with 15 items including snacks, drinks, and essentials.
-All prices are in Philippine Peso (₱).
+## Product Rules
+1. The machine starts with 15 items.
+2. Maximum item slots: 30
+3. Maximum stock per item: 15
+4. All prices are in Philippine Peso (₱).
+
+## Recycle Rates
+1. Plastic: ₱1.00 each
+2. Glass: ₱2.00 each
+3. Aluminum: ₱3.00 each
 
 ## Technical Details
 - **Framework**: .NET with Windows Forms
 - **Language**: C#
-- **Data Storage**: In-memory using `DataStore` (resets on app close)
+- **Data Storage**: CSV files in `bin/Debug/net10.0-windows/data`
 - **Architecture**: Multi-form with shared static DataStore class
 - **Toolbox Controls**: MenuStrip, ContextMenuStrip, Panel, GroupBox, DataGridView
+
+### CSV Files
+1. `inventory.csv` stores current inventory and item metadata
+2. `eventLog.csv` stores customer/admin events with UTC timestamps
 
 ## Documentation
 

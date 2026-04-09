@@ -6,6 +6,7 @@ namespace Eco_Matic_Winforms
         static void Main()
         {
             ApplicationConfiguration.Initialize();
+            DataStore.Initialize();
             Application.Run(new MainForm());
         }
     }

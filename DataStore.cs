@@ -2,27 +2,66 @@ namespace Eco_Matic_Winforms
 {
     public static class DataStore
     {
-        public static List<Product> Products { get; } = new()
+        public const int MaxItemSlots = 30;
+        public const int MaxStockPerItem = 15;
+
+        public static readonly IReadOnlyDictionary<RecycleMaterial, decimal> RecycleRates =
+            new Dictionary<RecycleMaterial, decimal>
             {
-                new Product { Id = 1,  Name = "Mr Chips", Price = 30.5m, Stock = 10 },
-                new Product { Id = 2,  Name = "Nova", Price = 40m, Stock = 10 },
-                new Product { Id = 3,  Name = "Coca Cola", Price = 30.5m, Stock = 10 },
-                new Product { Id = 4,  Name = "Pepsi", Price = 30m,Stock = 10 },
-                new Product { Id = 5,  Name = "Bandaid Box", Price = 20m, Stock = 10 },
-                new Product { Id = 6,  Name = "Eco Bag", Price = 30.75m, Stock = 10 },
-                new Product { Id = 7,  Name = "Piattos", Price = 35m, Stock = 10 },
-                new Product { Id = 8,  Name = "Chippy", Price = 32m, Stock = 10 },
-                new Product { Id = 9,  Name = "Roller Coaster", Price = 28.5m, Stock = 10 },
-                new Product { Id = 10, Name = "Fudge Bar", Price = 25m, Stock = 10 },
-                new Product { Id = 11, Name = "Cheese Ring", Price = 30m, Stock = 10 },
-                new Product { Id = 12, Name = "RC Cola", Price = 25m, Stock = 10 },
-                new Product { Id = 13, Name = "Sting", Price = 27.5m, Stock = 10 },
-                new Product { Id = 14, Name = "Zest-O Orange", Price = 15m, Stock = 10 },
-                new Product { Id = 15, Name = "Del Monte Pineapple Juice", Price = 22.5m, Stock = 10 }
+                [RecycleMaterial.Plastic] = 1.00m,
+                [RecycleMaterial.Glass] = 2.00m,
+                [RecycleMaterial.Aluminum] = 3.00m
             };
 
+        private static readonly List<Product> DefaultProducts = new()
+            {
+                Product.Create(ProductType.Snack, 1, "Mr Chips", 30.5m, 10, "Crunchy salted potato chips.", 160),
+                Product.Create(ProductType.Snack, 2, "Nova", 40m, 10, "Cheesy square crackers.", 170),
+                Product.Create(ProductType.Drink, 3, "Coca Cola", 30.5m, 10, "Classic cola refreshment.", 140, 330),
+                Product.Create(ProductType.Drink, 4, "Pepsi", 30m, 10, "Bold cola flavor.", 150, 330),
+                Product.Create(ProductType.Misc, 5, "Bandaid Box", 20m, 10, "Compact first-aid strips."),
+                Product.Create(ProductType.Misc, 6, "Eco Bag", 30.75m, 10, "Reusable eco-friendly carry bag."),
+                Product.Create(ProductType.Snack, 7, "Piattos", 35m, 10, "Sour cream and onion chips.", 180),
+                Product.Create(ProductType.Snack, 8, "Chippy", 32m, 10, "Light and crispy chips.", 175),
+                Product.Create(ProductType.Snack, 9, "Roller Coaster", 28.5m, 10, "Ridged chips with barbecue taste.", 165),
+                Product.Create(ProductType.Snack, 10, "Fudge Bar", 25m, 10, "Chocolate coated wafer bar.", 150),
+                Product.Create(ProductType.Snack, 11, "Cheese Ring", 30m, 10, "Cheesy ring-shaped corn snack.", 170),
+                Product.Create(ProductType.Drink, 12, "RC Cola", 25m, 10, "Refreshing RC cola.", 135, 330),
+                Product.Create(ProductType.Drink, 13, "Sting", 27.5m, 10, "Sweet energy drink.", 170, 320),
+                Product.Create(ProductType.Drink, 14, "Zest-O Orange", 15m, 10, "Orange powdered juice drink.", 80, 250),
+                Product.Create(ProductType.Drink, 15, "Del Monte Pineapple Juice", 22.5m, 10, "Pineapple juice in tetra pack.", 110, 250)
+            };
+
+        public static List<Product> Products { get; } = new();
         public static List<Transaction> Transactions { get; } = new();
         public static int NextTransactionId { get; set; } = 1;
         public static Transaction? LastTransaction { get; set; }
+
+        public static void Initialize()
+        {
+            Products.Clear();
+            Products.AddRange(CsvStorage.LoadInventory(DefaultProducts));
+            CsvStorage.EnsureEventLogFile();
+            NextTransactionId = 1;
+            LastTransaction = null;
+            Transactions.Clear();
+        }
+
+        public static void SaveInventory() => CsvStorage.SaveInventory(Products);
+
+        public static void LogEvent(string eventType, string details, decimal amount = 0m)
+        {
+            CsvStorage.AppendEvent(new EventLogEntry
+            {
+                TimestampUtc = DateTime.UtcNow,
+                EventType = eventType,
+                Details = details,
+                Amount = amount
+            });
+        }
+
+        public static List<EventLogEntry> ReadLogs() => CsvStorage.LoadEventLog();
+
+        public static void ClearLogs() => CsvStorage.ClearEventLog();
     }
 }
