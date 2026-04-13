@@ -42,6 +42,21 @@ namespace Eco_Matic_Winforms
                 y += 24;
             }
 
+            if (_transaction.Items.Count == 0)
+            {
+                var lbl = new Label
+                {
+                    Text = "No purchased items recorded.",
+                    Font = new Font("Consolas", 10),
+                    ForeColor = Color.FromArgb(120, 120, 120),
+                    AutoSize = false,
+                    Size = new Size(330, 22),
+                    Location = new Point(5, y)
+                };
+                itemsPanel.Controls.Add(lbl);
+                y += 24;
+            }
+
             foreach (var recycle in _transaction.RecycledItems)
             {
                 string line = $"Recycle {recycle.Material,-8} {recycle.Pieces,4}pc +{recycle.TotalPoints} PTS";

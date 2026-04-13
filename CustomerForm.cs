@@ -6,6 +6,7 @@ namespace Eco_Matic_Winforms
         private decimal _insertedMoney = 0;
         private string? _activeRfid;
         private int _cardPointsBalance;
+        private Transaction? _sessionTransaction;
 
         // Slot lookup
         private readonly record struct SlotControls(Panel Panel, PictureBox PictureBox, Label NameLabel, Label PriceLabel, Button SelectButton);
@@ -378,29 +379,51 @@ namespace Eco_Matic_Winforms
             product.Stock--;
             DataStore.SaveInventory();
 
-            // Log transaction
-            var transaction = new Transaction
+            // Log/update session transaction so receipt includes all items bought in this run.
+            if (_sessionTransaction == null)
             {
-                Id = DataStore.NextTransactionId++,
-                Date = DateTime.Now,
-                TotalAmount = product.Price,
-                AmountPaid = product.Price,
-                CashPaid = cashNeeded,
-                PointsUsed = (int)pointsUsedPeso,
-                Change = 0
-            };
-            transaction.Items.Add(new TransactionItem
-            {
-                ProductId = product.Id,
-                ProductName = product.Name,
-                Quantity = 1,
-                UnitPrice = product.Price
-            });
-            foreach (var re in _recycleEntries)
-                transaction.RecycledItems.Add(new RecycleEntry { Material = re.Material, Pieces = re.Pieces, PointsPerPiece = re.PointsPerPiece });
+                _sessionTransaction = new Transaction
+                {
+                    Id = DataStore.NextTransactionId++,
+                    Date = DateTime.Now,
+                    Change = 0
+                };
+                DataStore.Transactions.Add(_sessionTransaction);
+            }
 
-            DataStore.Transactions.Add(transaction);
-            DataStore.LastTransaction = transaction;
+            var existingItem = _sessionTransaction.Items.FirstOrDefault(x => x.ProductId == product.Id && x.UnitPrice == product.Price);
+            if (existingItem == null)
+            {
+                _sessionTransaction.Items.Add(new TransactionItem
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Quantity = 1,
+                    UnitPrice = product.Price
+                });
+            }
+            else
+            {
+                existingItem.Quantity += 1;
+            }
+
+            _sessionTransaction.TotalAmount += product.Price;
+            _sessionTransaction.AmountPaid += product.Price;
+            _sessionTransaction.CashPaid += cashNeeded;
+            _sessionTransaction.PointsUsed += (int)pointsUsedPeso;
+
+            _sessionTransaction.RecycledItems.Clear();
+            foreach (var re in _recycleEntries)
+            {
+                _sessionTransaction.RecycledItems.Add(new RecycleEntry
+                {
+                    Material = re.Material,
+                    Pieces = re.Pieces,
+                    PointsPerPiece = re.PointsPerPiece
+                });
+            }
+
+            DataStore.LastTransaction = _sessionTransaction;
             DataStore.LogEvent("PURCHASE", $"1x {product.Name} (cash ₱{cashNeeded:F2}, points {pointsUsedPeso:F0})", product.Price);
             DataStore.RecordSale(product);
 
