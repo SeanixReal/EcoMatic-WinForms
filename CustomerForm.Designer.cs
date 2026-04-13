@@ -7,9 +7,7 @@ namespace Eco_Matic_Winforms
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
@@ -18,37 +16,45 @@ namespace Eco_Matic_Winforms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            menuStrip = new MenuStrip();
-            fileMenu = new ToolStripMenuItem();
-            backMenuItem = new ToolStripMenuItem();
-            openReadmeMenuItem = new ToolStripMenuItem();
-            helpMenu = new ToolStripMenuItem();
-            howToBuyMenuItem = new ToolStripMenuItem();
-            cartContextMenu = new ContextMenuStrip(components);
-            removeItemMenuItem = new ToolStripMenuItem();
-            clearAllMenuItem = new ToolStripMenuItem();
-            leftPanel = new Panel();
-            productPanel = new FlowLayoutPanel();
-            btnProd1 = new Button();
-            btnProd2 = new Button();
-            btnProd3 = new Button();
-            btnProd4 = new Button();
-            btnProd5 = new Button();
-            btnProd6 = new Button();
-            btnProd7 = new Button();
-            btnProd8 = new Button();
-            btnProd9 = new Button();
-            btnProd10 = new Button();
-            btnProd11 = new Button();
-            btnProd12 = new Button();
-            btnProd13 = new Button();
-            btnProd14 = new Button();
-            btnProd15 = new Button();
-            paymentGroup = new GroupBox();
-            lblCart = new Label();
-            cartList = new ListBox();
-            lblTotal = new Label();
-            lblInsertHint = new Label();
+
+            // ── Title bar ──
+            pnlTitleBar = new Panel();
+            lblTitleBar = new Label();
+            btnMinimize = new Button();
+            btnClose = new Button();
+
+            // ── Machine body ──
+            pnlMachineBody = new Panel();
+
+            // ── Header ──
+            pnlHeader = new Panel();
+            lblBrand = new Label();
+            lblJpn = new Label();
+
+            // ── Cabinet ──
+            pnlCabinet = new Panel();
+            pnlCabinetInner = new Panel();
+
+            // ── 12 product slots ──
+            pnlSlot1  = new Panel(); picSlot1  = new PictureBox(); lblName1  = new Label(); lblPrice1  = new Label(); btnSel1  = new Button();
+            pnlSlot2  = new Panel(); picSlot2  = new PictureBox(); lblName2  = new Label(); lblPrice2  = new Label(); btnSel2  = new Button();
+            pnlSlot3  = new Panel(); picSlot3  = new PictureBox(); lblName3  = new Label(); lblPrice3  = new Label(); btnSel3  = new Button();
+            pnlSlot4  = new Panel(); picSlot4  = new PictureBox(); lblName4  = new Label(); lblPrice4  = new Label(); btnSel4  = new Button();
+            pnlSlot5  = new Panel(); picSlot5  = new PictureBox(); lblName5  = new Label(); lblPrice5  = new Label(); btnSel5  = new Button();
+            pnlSlot6  = new Panel(); picSlot6  = new PictureBox(); lblName6  = new Label(); lblPrice6  = new Label(); btnSel6  = new Button();
+            pnlSlot7  = new Panel(); picSlot7  = new PictureBox(); lblName7  = new Label(); lblPrice7  = new Label(); btnSel7  = new Button();
+            pnlSlot8  = new Panel(); picSlot8  = new PictureBox(); lblName8  = new Label(); lblPrice8  = new Label(); btnSel8  = new Button();
+            pnlSlot9  = new Panel(); picSlot9  = new PictureBox(); lblName9  = new Label(); lblPrice9  = new Label(); btnSel9  = new Button();
+            pnlSlot10 = new Panel(); picSlot10 = new PictureBox(); lblName10 = new Label(); lblPrice10 = new Label(); btnSel10 = new Button();
+            pnlSlot11 = new Panel(); picSlot11 = new PictureBox(); lblName11 = new Label(); lblPrice11 = new Label(); btnSel11 = new Button();
+            pnlSlot12 = new Panel(); picSlot12 = new PictureBox(); lblName12 = new Label(); lblPrice12 = new Label(); btnSel12 = new Button();
+
+            // ── Control panel ──
+            pnlControlPanel = new Panel();
+            pnlMoneyDisplay = new Panel();
+            lblMoneyLabel = new Label();
+            lblMoneyAmount = new Label();
+            lblMoneyTitle = new Label();
             moneyFlow = new FlowLayoutPanel();
             btnMoney20 = new Button();
             btnMoney50 = new Button();
@@ -56,768 +62,562 @@ namespace Eco_Matic_Winforms
             btnMoney200 = new Button();
             btnMoney500 = new Button();
             btnMoney1000 = new Button();
-            lblInserted = new Label();
-            lblChange = new Label();
-            lblExamine = new Label();
-            cboExamineItem = new ComboBox();
-            btnExamine = new Button();
-            recycleGroup = new GroupBox();
-            lblRecycleType = new Label();
+            btnCoinReturn = new Button();
+
+            // ── Recycle ──
+            pnlRecycleArea = new Panel();
+            lblRecycleTitle = new Label();
             cboRecycleType = new ComboBox();
-            lblRecycleQty = new Label();
             nudRecycleQty = new NumericUpDown();
             btnRecycle = new Button();
             lblRecycleStatus = new Label();
-            btnPurchase = new Button();
+
+            // ── Examine ──
+            pnlExamineArea = new Panel();
+            lblExamineTitle = new Label();
+            cboExamineItem = new ComboBox();
+            btnExamine = new Button();
+
+            // ── Buttons ──
             btnBack = new Button();
-            btnClear = new Button();
-            menuStrip.SuspendLayout();
-            cartContextMenu.SuspendLayout();
-            leftPanel.SuspendLayout();
-            productPanel.SuspendLayout();
-            paymentGroup.SuspendLayout();
+            btnHelp = new Button();
+
+            // ── Pickup slot ──
+            pnlPickupSlot = new Panel();
+            lblPickup = new Label();
+            picDispense = new PictureBox();
+            lblDispenseText = new Label();
+
+            // ── Footer ──
+            lblFooter = new Label();
+
+            // Suspends
+            pnlTitleBar.SuspendLayout();
+            pnlMachineBody.SuspendLayout();
+            pnlHeader.SuspendLayout();
+            pnlCabinet.SuspendLayout();
+            pnlCabinetInner.SuspendLayout();
+            pnlControlPanel.SuspendLayout();
+            pnlMoneyDisplay.SuspendLayout();
             moneyFlow.SuspendLayout();
-            recycleGroup.SuspendLayout();
+            pnlRecycleArea.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudRecycleQty).BeginInit();
+            pnlExamineArea.SuspendLayout();
+            pnlPickupSlot.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picDispense).BeginInit();
+            for (int i = 0; i < 12; i++)
+            {
+                var pics = new[] { picSlot1, picSlot2, picSlot3, picSlot4, picSlot5, picSlot6, picSlot7, picSlot8, picSlot9, picSlot10, picSlot11, picSlot12 };
+                ((System.ComponentModel.ISupportInitialize)pics[i]).BeginInit();
+            }
             SuspendLayout();
-            // 
-            // menuStrip
-            // 
-            menuStrip.BackColor = Color.FromArgb(230, 240, 230);
-            menuStrip.Font = new Font("Segoe UI", 10F);
-            menuStrip.Items.AddRange(new ToolStripItem[] { fileMenu, helpMenu });
-            menuStrip.Location = new Point(0, 0);
-            menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(980, 27);
-            menuStrip.TabIndex = 0;
-            menuStrip.Text = "menuStrip";
-            // 
-            // fileMenu
-            // 
-            fileMenu.DropDownItems.AddRange(new ToolStripItem[] { backMenuItem, openReadmeMenuItem });
-            fileMenu.Name = "fileMenu";
-            fileMenu.Size = new Size(41, 23);
-            fileMenu.Text = "File";
-            // 
-            // backMenuItem
-            // 
-            backMenuItem.Name = "backMenuItem";
-            backMenuItem.Size = new Size(166, 24);
-            backMenuItem.Text = "Back to Main";
-            backMenuItem.Click += backMenuItem_Click;
-            // 
-            // openReadmeMenuItem
-            // 
-            openReadmeMenuItem.Name = "openReadmeMenuItem";
-            openReadmeMenuItem.Size = new Size(166, 24);
-            openReadmeMenuItem.Text = "Open ReadMe";
-            openReadmeMenuItem.Click += openReadmeMenuItem_Click;
-            // 
-            // helpMenu
-            // 
-            helpMenu.DropDownItems.AddRange(new ToolStripItem[] { howToBuyMenuItem });
-            helpMenu.Name = "helpMenu";
-            helpMenu.Size = new Size(49, 23);
-            helpMenu.Text = "Help";
-            // 
-            // howToBuyMenuItem
-            // 
-            howToBuyMenuItem.Name = "howToBuyMenuItem";
-            howToBuyMenuItem.Size = new Size(150, 24);
-            howToBuyMenuItem.Text = "How to Buy";
-            howToBuyMenuItem.Click += howToBuyMenuItem_Click;
-            // 
-            // cartContextMenu
-            // 
-            cartContextMenu.Items.AddRange(new ToolStripItem[] { removeItemMenuItem, clearAllMenuItem });
-            cartContextMenu.Name = "cartContextMenu";
-            cartContextMenu.Size = new Size(192, 48);
-            // 
-            // removeItemMenuItem
-            // 
-            removeItemMenuItem.Name = "removeItemMenuItem";
-            removeItemMenuItem.Size = new Size(191, 22);
-            removeItemMenuItem.Text = "Remove Selected Item";
-            removeItemMenuItem.Click += removeItemMenuItem_Click;
-            // 
-            // clearAllMenuItem
-            // 
-            clearAllMenuItem.Name = "clearAllMenuItem";
-            clearAllMenuItem.Size = new Size(191, 22);
-            clearAllMenuItem.Text = "Clear All Items";
-            clearAllMenuItem.Click += clearAllMenuItem_Click;
-            // 
-            // leftPanel
-            // 
-            leftPanel.BackColor = Color.White;
-            leftPanel.BorderStyle = BorderStyle.FixedSingle;
-            leftPanel.Controls.Add(productPanel);
-            leftPanel.Location = new Point(10, 35);
-            leftPanel.Name = "leftPanel";
-            leftPanel.Size = new Size(608, 540);
-            leftPanel.TabIndex = 1;
-            // 
-            // productPanel
-            // 
-            productPanel.AutoScroll = true;
-            productPanel.BackColor = Color.White;
-            productPanel.Controls.Add(btnProd1);
-            productPanel.Controls.Add(btnProd2);
-            productPanel.Controls.Add(btnProd3);
-            productPanel.Controls.Add(btnProd4);
-            productPanel.Controls.Add(btnProd5);
-            productPanel.Controls.Add(btnProd6);
-            productPanel.Controls.Add(btnProd7);
-            productPanel.Controls.Add(btnProd8);
-            productPanel.Controls.Add(btnProd9);
-            productPanel.Controls.Add(btnProd10);
-            productPanel.Controls.Add(btnProd11);
-            productPanel.Controls.Add(btnProd12);
-            productPanel.Controls.Add(btnProd13);
-            productPanel.Controls.Add(btnProd14);
-            productPanel.Controls.Add(btnProd15);
-            productPanel.Dock = DockStyle.Fill;
-            productPanel.Location = new Point(0, 0);
-            productPanel.Name = "productPanel";
-            productPanel.Padding = new Padding(6);
-            productPanel.Size = new Size(606, 538);
-            productPanel.TabIndex = 0;
-            // 
-            // btnProd1
-            // 
-            btnProd1.BackColor = Color.White;
-            btnProd1.Cursor = Cursors.Hand;
-            btnProd1.FlatStyle = FlatStyle.Flat;
-            btnProd1.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd1.Location = new Point(10, 10);
-            btnProd1.Margin = new Padding(4);
-            btnProd1.Name = "btnProd1";
-            btnProd1.Size = new Size(110, 70);
-            btnProd1.TabIndex = 0;
-            btnProd1.Text = "Product 1";
-            btnProd1.UseVisualStyleBackColor = false;
-            // 
-            // btnProd2
-            // 
-            btnProd2.BackColor = Color.White;
-            btnProd2.Cursor = Cursors.Hand;
-            btnProd2.FlatStyle = FlatStyle.Flat;
-            btnProd2.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd2.Location = new Point(128, 10);
-            btnProd2.Margin = new Padding(4);
-            btnProd2.Name = "btnProd2";
-            btnProd2.Size = new Size(110, 70);
-            btnProd2.TabIndex = 1;
-            btnProd2.Text = "Product 2";
-            btnProd2.UseVisualStyleBackColor = false;
-            // 
-            // btnProd3
-            // 
-            btnProd3.BackColor = Color.White;
-            btnProd3.Cursor = Cursors.Hand;
-            btnProd3.FlatStyle = FlatStyle.Flat;
-            btnProd3.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd3.Location = new Point(246, 10);
-            btnProd3.Margin = new Padding(4);
-            btnProd3.Name = "btnProd3";
-            btnProd3.Size = new Size(110, 70);
-            btnProd3.TabIndex = 2;
-            btnProd3.Text = "Product 3";
-            btnProd3.UseVisualStyleBackColor = false;
-            // 
-            // btnProd4
-            // 
-            btnProd4.BackColor = Color.White;
-            btnProd4.Cursor = Cursors.Hand;
-            btnProd4.FlatStyle = FlatStyle.Flat;
-            btnProd4.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd4.Location = new Point(364, 10);
-            btnProd4.Margin = new Padding(4);
-            btnProd4.Name = "btnProd4";
-            btnProd4.Size = new Size(110, 70);
-            btnProd4.TabIndex = 3;
-            btnProd4.Text = "Product 4";
-            btnProd4.UseVisualStyleBackColor = false;
-            // 
-            // btnProd5
-            // 
-            btnProd5.BackColor = Color.White;
-            btnProd5.Cursor = Cursors.Hand;
-            btnProd5.FlatStyle = FlatStyle.Flat;
-            btnProd5.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd5.Location = new Point(482, 10);
-            btnProd5.Margin = new Padding(4);
-            btnProd5.Name = "btnProd5";
-            btnProd5.Size = new Size(110, 70);
-            btnProd5.TabIndex = 4;
-            btnProd5.Text = "Product 5";
-            btnProd5.UseVisualStyleBackColor = false;
-            // 
-            // btnProd6
-            // 
-            btnProd6.BackColor = Color.White;
-            btnProd6.Cursor = Cursors.Hand;
-            btnProd6.FlatStyle = FlatStyle.Flat;
-            btnProd6.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd6.Location = new Point(10, 88);
-            btnProd6.Margin = new Padding(4);
-            btnProd6.Name = "btnProd6";
-            btnProd6.Size = new Size(110, 70);
-            btnProd6.TabIndex = 5;
-            btnProd6.Text = "Product 6";
-            btnProd6.UseVisualStyleBackColor = false;
-            // 
-            // btnProd7
-            // 
-            btnProd7.BackColor = Color.White;
-            btnProd7.Cursor = Cursors.Hand;
-            btnProd7.FlatStyle = FlatStyle.Flat;
-            btnProd7.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd7.Location = new Point(128, 88);
-            btnProd7.Margin = new Padding(4);
-            btnProd7.Name = "btnProd7";
-            btnProd7.Size = new Size(110, 70);
-            btnProd7.TabIndex = 6;
-            btnProd7.Text = "Product 7";
-            btnProd7.UseVisualStyleBackColor = false;
-            // 
-            // btnProd8
-            // 
-            btnProd8.BackColor = Color.White;
-            btnProd8.Cursor = Cursors.Hand;
-            btnProd8.FlatStyle = FlatStyle.Flat;
-            btnProd8.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd8.Location = new Point(246, 88);
-            btnProd8.Margin = new Padding(4);
-            btnProd8.Name = "btnProd8";
-            btnProd8.Size = new Size(110, 70);
-            btnProd8.TabIndex = 7;
-            btnProd8.Text = "Product 8";
-            btnProd8.UseVisualStyleBackColor = false;
-            // 
-            // btnProd9
-            // 
-            btnProd9.BackColor = Color.White;
-            btnProd9.Cursor = Cursors.Hand;
-            btnProd9.FlatStyle = FlatStyle.Flat;
-            btnProd9.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd9.Location = new Point(364, 88);
-            btnProd9.Margin = new Padding(4);
-            btnProd9.Name = "btnProd9";
-            btnProd9.Size = new Size(110, 70);
-            btnProd9.TabIndex = 8;
-            btnProd9.Text = "Product 9";
-            btnProd9.UseVisualStyleBackColor = false;
-            // 
-            // btnProd10
-            // 
-            btnProd10.BackColor = Color.White;
-            btnProd10.Cursor = Cursors.Hand;
-            btnProd10.FlatStyle = FlatStyle.Flat;
-            btnProd10.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd10.Location = new Point(482, 88);
-            btnProd10.Margin = new Padding(4);
-            btnProd10.Name = "btnProd10";
-            btnProd10.Size = new Size(110, 70);
-            btnProd10.TabIndex = 9;
-            btnProd10.Text = "Product 10";
-            btnProd10.UseVisualStyleBackColor = false;
-            // 
-            // btnProd11
-            // 
-            btnProd11.BackColor = Color.White;
-            btnProd11.Cursor = Cursors.Hand;
-            btnProd11.FlatStyle = FlatStyle.Flat;
-            btnProd11.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd11.Location = new Point(10, 166);
-            btnProd11.Margin = new Padding(4);
-            btnProd11.Name = "btnProd11";
-            btnProd11.Size = new Size(110, 70);
-            btnProd11.TabIndex = 10;
-            btnProd11.Text = "Product 11";
-            btnProd11.UseVisualStyleBackColor = false;
-            // 
-            // btnProd12
-            // 
-            btnProd12.BackColor = Color.White;
-            btnProd12.Cursor = Cursors.Hand;
-            btnProd12.FlatStyle = FlatStyle.Flat;
-            btnProd12.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd12.Location = new Point(128, 166);
-            btnProd12.Margin = new Padding(4);
-            btnProd12.Name = "btnProd12";
-            btnProd12.Size = new Size(110, 70);
-            btnProd12.TabIndex = 11;
-            btnProd12.Text = "Product 12";
-            btnProd12.UseVisualStyleBackColor = false;
-            // 
-            // btnProd13
-            // 
-            btnProd13.BackColor = Color.White;
-            btnProd13.Cursor = Cursors.Hand;
-            btnProd13.FlatStyle = FlatStyle.Flat;
-            btnProd13.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd13.Location = new Point(246, 166);
-            btnProd13.Margin = new Padding(4);
-            btnProd13.Name = "btnProd13";
-            btnProd13.Size = new Size(110, 70);
-            btnProd13.TabIndex = 12;
-            btnProd13.Text = "Product 13";
-            btnProd13.UseVisualStyleBackColor = false;
-            // 
-            // btnProd14
-            // 
-            btnProd14.BackColor = Color.White;
-            btnProd14.Cursor = Cursors.Hand;
-            btnProd14.FlatStyle = FlatStyle.Flat;
-            btnProd14.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd14.Location = new Point(364, 166);
-            btnProd14.Margin = new Padding(4);
-            btnProd14.Name = "btnProd14";
-            btnProd14.Size = new Size(110, 70);
-            btnProd14.TabIndex = 13;
-            btnProd14.Text = "Product 14";
-            btnProd14.UseVisualStyleBackColor = false;
-            // 
-            // btnProd15
-            // 
-            btnProd15.BackColor = Color.White;
-            btnProd15.Cursor = Cursors.Hand;
-            btnProd15.FlatStyle = FlatStyle.Flat;
-            btnProd15.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
-            btnProd15.Location = new Point(482, 166);
-            btnProd15.Margin = new Padding(4);
-            btnProd15.Name = "btnProd15";
-            btnProd15.Size = new Size(110, 70);
-            btnProd15.TabIndex = 14;
-            btnProd15.Text = "Product 15";
-            btnProd15.UseVisualStyleBackColor = false;
-            // 
-            // paymentGroup
-            // 
-            paymentGroup.BackColor = Color.FromArgb(250, 252, 250);
-            paymentGroup.Controls.Add(lblCart);
-            paymentGroup.Controls.Add(cartList);
-            paymentGroup.Controls.Add(lblTotal);
-            paymentGroup.Controls.Add(lblInsertHint);
-            paymentGroup.Controls.Add(moneyFlow);
-            paymentGroup.Controls.Add(lblInserted);
-            paymentGroup.Controls.Add(lblChange);
-            paymentGroup.Controls.Add(lblExamine);
-            paymentGroup.Controls.Add(cboExamineItem);
-            paymentGroup.Controls.Add(btnExamine);
-            paymentGroup.Controls.Add(recycleGroup);
-            paymentGroup.Controls.Add(btnPurchase);
-            paymentGroup.Controls.Add(btnBack);
-            paymentGroup.Controls.Add(btnClear);
-            paymentGroup.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            paymentGroup.ForeColor = Color.FromArgb(52, 73, 94);
-            paymentGroup.Location = new Point(618, 35);
-            paymentGroup.Name = "paymentGroup";
-            paymentGroup.Size = new Size(352, 540);
-            paymentGroup.TabIndex = 2;
-            paymentGroup.TabStop = false;
-            paymentGroup.Text = "  Payment and Actions  ";
-            // 
-            // lblCart
-            // 
-            lblCart.AutoSize = true;
-            lblCart.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblCart.Location = new Point(10, 24);
-            lblCart.Name = "lblCart";
-            lblCart.Size = new Size(33, 15);
-            lblCart.TabIndex = 0;
-            lblCart.Text = "Cart:";
-            // 
-            // cartList
-            // 
-            cartList.BorderStyle = BorderStyle.FixedSingle;
-            cartList.ContextMenuStrip = cartContextMenu;
-            cartList.Font = new Font("Consolas", 9F);
-            cartList.FormattingEnabled = true;
-            cartList.Location = new Point(10, 42);
-            cartList.Name = "cartList";
-            cartList.Size = new Size(330, 86);
-            cartList.TabIndex = 1;
-            // 
-            // lblTotal
-            // 
-            lblTotal.AutoSize = true;
-            lblTotal.Font = new Font("Segoe UI", 13F, FontStyle.Bold);
-            lblTotal.ForeColor = Color.FromArgb(34, 139, 34);
-            lblTotal.Location = new Point(10, 132);
-            lblTotal.Name = "lblTotal";
-            lblTotal.Size = new Size(115, 25);
-            lblTotal.TabIndex = 2;
-            lblTotal.Text = "Total:  P0.00";
-            // 
-            // lblInsertHint
-            // 
-            lblInsertHint.AutoSize = true;
-            lblInsertHint.Font = new Font("Segoe UI", 9F);
-            lblInsertHint.ForeColor = Color.Gray;
-            lblInsertHint.Location = new Point(10, 162);
-            lblInsertHint.Name = "lblInsertHint";
-            lblInsertHint.Size = new Size(79, 15);
-            lblInsertHint.TabIndex = 3;
-            lblInsertHint.Text = "Insert Money:";
-            // 
-            // moneyFlow
-            // 
-            moneyFlow.Controls.Add(btnMoney20);
-            moneyFlow.Controls.Add(btnMoney50);
-            moneyFlow.Controls.Add(btnMoney100);
-            moneyFlow.Controls.Add(btnMoney200);
-            moneyFlow.Controls.Add(btnMoney500);
-            moneyFlow.Controls.Add(btnMoney1000);
-            moneyFlow.Location = new Point(10, 182);
+
+            // ════════════════════════════════════════════════
+            // pnlTitleBar — custom borderless title bar
+            // ════════════════════════════════════════════════
+            pnlTitleBar.BackColor = Color.FromArgb(8, 8, 18);
+            pnlTitleBar.Dock = DockStyle.Top;
+            pnlTitleBar.Name = "pnlTitleBar";
+            pnlTitleBar.Size = new Size(660, 32);
+            pnlTitleBar.Controls.Add(lblTitleBar);
+            pnlTitleBar.Controls.Add(btnHelp);
+            pnlTitleBar.Controls.Add(btnMinimize);
+            pnlTitleBar.Controls.Add(btnClose);
+            //
+            lblTitleBar.AutoSize = false;
+            lblTitleBar.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblTitleBar.ForeColor = Color.FromArgb(100, 120, 140);
+            lblTitleBar.Location = new Point(12, 0);
+            lblTitleBar.Name = "lblTitleBar";
+            lblTitleBar.Size = new Size(400, 32);
+            lblTitleBar.Text = "ECO-MATIC  ●  エコマティック  自動販売機";
+            lblTitleBar.TextAlign = ContentAlignment.MiddleLeft;
+            //
+            btnHelp.FlatStyle = FlatStyle.Flat;
+            btnHelp.FlatAppearance.BorderSize = 0;
+            btnHelp.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnHelp.ForeColor = Color.FromArgb(100, 120, 160);
+            btnHelp.BackColor = Color.Transparent;
+            btnHelp.Cursor = Cursors.Hand;
+            btnHelp.Location = new Point(540, 0);
+            btnHelp.Name = "btnHelp";
+            btnHelp.Size = new Size(32, 32);
+            btnHelp.Text = "?";
+            btnHelp.Click += btnHelp_Click;
+            //
+            btnMinimize.FlatStyle = FlatStyle.Flat;
+            btnMinimize.FlatAppearance.BorderSize = 0;
+            btnMinimize.Font = new Font("Segoe UI", 12F);
+            btnMinimize.ForeColor = Color.FromArgb(140, 150, 170);
+            btnMinimize.BackColor = Color.Transparent;
+            btnMinimize.Cursor = Cursors.Hand;
+            btnMinimize.Location = new Point(580, 0);
+            btnMinimize.Name = "btnMinimize";
+            btnMinimize.Size = new Size(40, 32);
+            btnMinimize.Text = "─";
+            btnMinimize.Click += btnMinimize_Click;
+            //
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnClose.ForeColor = Color.FromArgb(192, 57, 43);
+            btnClose.BackColor = Color.Transparent;
+            btnClose.Cursor = Cursors.Hand;
+            btnClose.Location = new Point(620, 0);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(40, 32);
+            btnClose.Text = "✕";
+            btnClose.Click += btnClose_Click;
+
+            // ════════════════════════════════════════════════
+            // pnlMachineBody
+            // ════════════════════════════════════════════════
+            pnlMachineBody.BackColor = Color.FromArgb(18, 18, 36);
+            pnlMachineBody.Name = "pnlMachineBody";
+            pnlMachineBody.Size = new Size(660, 920);
+            pnlMachineBody.Controls.Add(pnlHeader);
+            pnlMachineBody.Controls.Add(pnlCabinet);
+            pnlMachineBody.Controls.Add(pnlControlPanel);
+            pnlMachineBody.Controls.Add(pnlPickupSlot);
+            pnlMachineBody.Controls.Add(lblFooter);
+
+            // ════════════════════════════════════════════════
+            // pnlHeader
+            // ════════════════════════════════════════════════
+            pnlHeader.BackColor = Color.FromArgb(10, 40, 80);
+            pnlHeader.Controls.Add(lblBrand);
+            pnlHeader.Controls.Add(lblJpn);
+            pnlHeader.Location = new Point(10, 6);
+            pnlHeader.Name = "pnlHeader";
+            pnlHeader.Size = new Size(640, 50);
+            //
+            lblBrand.Dock = DockStyle.Top;
+            lblBrand.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            lblBrand.ForeColor = Color.FromArgb(0, 210, 255);
+            lblBrand.Name = "lblBrand";
+            lblBrand.Size = new Size(640, 28);
+            lblBrand.Text = "🌿  ECO-MATIC";
+            lblBrand.TextAlign = ContentAlignment.MiddleCenter;
+            //
+            lblJpn.Dock = DockStyle.Bottom;
+            lblJpn.Font = new Font("Segoe UI", 8.25F);
+            lblJpn.ForeColor = Color.FromArgb(232, 67, 147);
+            lblJpn.Name = "lblJpn";
+            lblJpn.Size = new Size(640, 20);
+            lblJpn.Text = "エコマティック 自動販売機  ●  Eco Vending Machine";
+            lblJpn.TextAlign = ContentAlignment.MiddleCenter;
+
+            // ════════════════════════════════════════════════
+            // pnlCabinet — glass display with cyan glow border
+            // ════════════════════════════════════════════════
+            pnlCabinet.BackColor = Color.FromArgb(0, 160, 210);
+            pnlCabinet.Controls.Add(pnlCabinetInner);
+            pnlCabinet.Location = new Point(10, 60);
+            pnlCabinet.Name = "pnlCabinet";
+            pnlCabinet.Padding = new Padding(2);
+            pnlCabinet.Size = new Size(640, 468);
+            //
+            pnlCabinetInner.BackColor = Color.FromArgb(8, 10, 30);
+            pnlCabinetInner.Dock = DockStyle.Fill;
+            pnlCabinetInner.Name = "pnlCabinetInner";
+            pnlCabinetInner.Padding = new Padding(8, 6, 8, 6);
+
+            // ── Slot layout: 4 columns × 3 rows, each slot = image + name + price + button ──
+            int slotW = 150;
+            int slotH = 144;
+            int gapX = 6;
+            int gapY = 6;
+            int startX = 10;
+            int startY = 8;
+
+            ConfigureSlot(pnlSlot1,  picSlot1,  lblName1,  lblPrice1,  btnSel1,  "pnlSlot1",  startX + 0*(slotW+gapX), startY + 0*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot2,  picSlot2,  lblName2,  lblPrice2,  btnSel2,  "pnlSlot2",  startX + 1*(slotW+gapX), startY + 0*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot3,  picSlot3,  lblName3,  lblPrice3,  btnSel3,  "pnlSlot3",  startX + 2*(slotW+gapX), startY + 0*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot4,  picSlot4,  lblName4,  lblPrice4,  btnSel4,  "pnlSlot4",  startX + 3*(slotW+gapX), startY + 0*(slotH+gapY), slotW, slotH);
+
+            ConfigureSlot(pnlSlot5,  picSlot5,  lblName5,  lblPrice5,  btnSel5,  "pnlSlot5",  startX + 0*(slotW+gapX), startY + 1*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot6,  picSlot6,  lblName6,  lblPrice6,  btnSel6,  "pnlSlot6",  startX + 1*(slotW+gapX), startY + 1*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot7,  picSlot7,  lblName7,  lblPrice7,  btnSel7,  "pnlSlot7",  startX + 2*(slotW+gapX), startY + 1*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot8,  picSlot8,  lblName8,  lblPrice8,  btnSel8,  "pnlSlot8",  startX + 3*(slotW+gapX), startY + 1*(slotH+gapY), slotW, slotH);
+
+            ConfigureSlot(pnlSlot9,  picSlot9,  lblName9,  lblPrice9,  btnSel9,  "pnlSlot9",  startX + 0*(slotW+gapX), startY + 2*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot10, picSlot10, lblName10, lblPrice10, btnSel10, "pnlSlot10", startX + 1*(slotW+gapX), startY + 2*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot11, picSlot11, lblName11, lblPrice11, btnSel11, "pnlSlot11", startX + 2*(slotW+gapX), startY + 2*(slotH+gapY), slotW, slotH);
+            ConfigureSlot(pnlSlot12, picSlot12, lblName12, lblPrice12, btnSel12, "pnlSlot12", startX + 3*(slotW+gapX), startY + 2*(slotH+gapY), slotW, slotH);
+
+            pnlCabinetInner.Controls.AddRange(new Control[] {
+                pnlSlot1, pnlSlot2, pnlSlot3, pnlSlot4,
+                pnlSlot5, pnlSlot6, pnlSlot7, pnlSlot8,
+                pnlSlot9, pnlSlot10, pnlSlot11, pnlSlot12 });
+
+            // ════════════════════════════════════════════════
+            // pnlControlPanel
+            // ════════════════════════════════════════════════
+            pnlControlPanel.BackColor = Color.FromArgb(24, 24, 44);
+            pnlControlPanel.Location = new Point(10, 534);
+            pnlControlPanel.Name = "pnlControlPanel";
+            pnlControlPanel.Size = new Size(640, 218);
+            pnlControlPanel.Controls.Add(pnlMoneyDisplay);
+            pnlControlPanel.Controls.Add(lblMoneyTitle);
+            pnlControlPanel.Controls.Add(moneyFlow);
+            pnlControlPanel.Controls.Add(btnCoinReturn);
+            pnlControlPanel.Controls.Add(pnlRecycleArea);
+            pnlControlPanel.Controls.Add(pnlExamineArea);
+            pnlControlPanel.Controls.Add(btnBack);
+
+            // ── Money display (LED panel) ──
+            pnlMoneyDisplay.BackColor = Color.FromArgb(2, 2, 8);
+            pnlMoneyDisplay.Location = new Point(12, 8);
+            pnlMoneyDisplay.Name = "pnlMoneyDisplay";
+            pnlMoneyDisplay.Size = new Size(290, 50);
+            pnlMoneyDisplay.Controls.Add(lblMoneyLabel);
+            pnlMoneyDisplay.Controls.Add(lblMoneyAmount);
+            //
+            lblMoneyLabel.Font = new Font("Consolas", 8F);
+            lblMoneyLabel.ForeColor = Color.FromArgb(60, 80, 60);
+            lblMoneyLabel.Location = new Point(8, 4);
+            lblMoneyLabel.Name = "lblMoneyLabel";
+            lblMoneyLabel.Size = new Size(100, 15);
+            lblMoneyLabel.Text = "INSERTED:";
+            //
+            lblMoneyAmount.Font = new Font("Consolas", 20F, FontStyle.Bold);
+            lblMoneyAmount.ForeColor = Color.FromArgb(0, 230, 100);
+            lblMoneyAmount.Location = new Point(4, 16);
+            lblMoneyAmount.Name = "lblMoneyAmount";
+            lblMoneyAmount.Size = new Size(280, 32);
+            lblMoneyAmount.Text = "₱ 0.00";
+            lblMoneyAmount.TextAlign = ContentAlignment.MiddleRight;
+
+            // ── Money buttons ──
+            lblMoneyTitle.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblMoneyTitle.ForeColor = Color.FromArgb(241, 196, 15);
+            lblMoneyTitle.Location = new Point(12, 64);
+            lblMoneyTitle.Name = "lblMoneyTitle";
+            lblMoneyTitle.Size = new Size(200, 16);
+            lblMoneyTitle.Text = "💰  INSERT BILLS";
+            //
+            moneyFlow.Location = new Point(12, 82);
             moneyFlow.Name = "moneyFlow";
-            moneyFlow.Size = new Size(330, 76);
-            moneyFlow.TabIndex = 4;
-            // 
-            // btnMoney20
-            // 
-            btnMoney20.BackColor = Color.FromArgb(241, 196, 15);
-            btnMoney20.Cursor = Cursors.Hand;
-            btnMoney20.FlatAppearance.BorderSize = 0;
-            btnMoney20.FlatStyle = FlatStyle.Flat;
-            btnMoney20.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMoney20.Location = new Point(3, 3);
-            btnMoney20.Name = "btnMoney20";
-            btnMoney20.Size = new Size(100, 32);
-            btnMoney20.TabIndex = 0;
-            btnMoney20.Text = "P20";
-            btnMoney20.UseVisualStyleBackColor = false;
-            btnMoney20.Click += btnMoney_Click;
-            // 
-            // btnMoney50
-            // 
-            btnMoney50.BackColor = Color.FromArgb(241, 196, 15);
-            btnMoney50.Cursor = Cursors.Hand;
-            btnMoney50.FlatAppearance.BorderSize = 0;
-            btnMoney50.FlatStyle = FlatStyle.Flat;
-            btnMoney50.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMoney50.Location = new Point(109, 3);
-            btnMoney50.Name = "btnMoney50";
-            btnMoney50.Size = new Size(100, 32);
-            btnMoney50.TabIndex = 1;
-            btnMoney50.Text = "P50";
-            btnMoney50.UseVisualStyleBackColor = false;
-            btnMoney50.Click += btnMoney_Click;
-            // 
-            // btnMoney100
-            // 
-            btnMoney100.BackColor = Color.FromArgb(241, 196, 15);
-            btnMoney100.Cursor = Cursors.Hand;
-            btnMoney100.FlatAppearance.BorderSize = 0;
-            btnMoney100.FlatStyle = FlatStyle.Flat;
-            btnMoney100.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMoney100.Location = new Point(215, 3);
-            btnMoney100.Name = "btnMoney100";
-            btnMoney100.Size = new Size(100, 32);
-            btnMoney100.TabIndex = 2;
-            btnMoney100.Text = "P100";
-            btnMoney100.UseVisualStyleBackColor = false;
-            btnMoney100.Click += btnMoney_Click;
-            // 
-            // btnMoney200
-            // 
-            btnMoney200.BackColor = Color.FromArgb(241, 196, 15);
-            btnMoney200.Cursor = Cursors.Hand;
-            btnMoney200.FlatAppearance.BorderSize = 0;
-            btnMoney200.FlatStyle = FlatStyle.Flat;
-            btnMoney200.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMoney200.Location = new Point(3, 41);
-            btnMoney200.Name = "btnMoney200";
-            btnMoney200.Size = new Size(100, 32);
-            btnMoney200.TabIndex = 3;
-            btnMoney200.Text = "P200";
-            btnMoney200.UseVisualStyleBackColor = false;
-            btnMoney200.Click += btnMoney_Click;
-            // 
-            // btnMoney500
-            // 
-            btnMoney500.BackColor = Color.FromArgb(241, 196, 15);
-            btnMoney500.Cursor = Cursors.Hand;
-            btnMoney500.FlatAppearance.BorderSize = 0;
-            btnMoney500.FlatStyle = FlatStyle.Flat;
-            btnMoney500.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMoney500.Location = new Point(109, 41);
-            btnMoney500.Name = "btnMoney500";
-            btnMoney500.Size = new Size(100, 32);
-            btnMoney500.TabIndex = 4;
-            btnMoney500.Text = "P500";
-            btnMoney500.UseVisualStyleBackColor = false;
-            btnMoney500.Click += btnMoney_Click;
-            // 
-            // btnMoney1000
-            // 
-            btnMoney1000.BackColor = Color.FromArgb(241, 196, 15);
-            btnMoney1000.Cursor = Cursors.Hand;
-            btnMoney1000.FlatAppearance.BorderSize = 0;
-            btnMoney1000.FlatStyle = FlatStyle.Flat;
-            btnMoney1000.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnMoney1000.Location = new Point(215, 41);
-            btnMoney1000.Name = "btnMoney1000";
-            btnMoney1000.Size = new Size(100, 32);
-            btnMoney1000.TabIndex = 5;
-            btnMoney1000.Text = "P1000";
-            btnMoney1000.UseVisualStyleBackColor = false;
-            btnMoney1000.Click += btnMoney_Click;
-            // 
-            // lblInserted
-            // 
-            lblInserted.AutoSize = true;
-            lblInserted.Font = new Font("Segoe UI", 10F);
-            lblInserted.Location = new Point(10, 263);
-            lblInserted.Name = "lblInserted";
-            lblInserted.Size = new Size(101, 19);
-            lblInserted.TabIndex = 5;
-            lblInserted.Text = "Inserted: P0.00";
-            // 
-            // lblChange
-            // 
-            lblChange.AutoSize = true;
-            lblChange.Font = new Font("Segoe UI", 10F);
-            lblChange.Location = new Point(10, 284);
-            lblChange.Name = "lblChange";
-            lblChange.Size = new Size(102, 19);
-            lblChange.TabIndex = 6;
-            lblChange.Text = "Change:  P0.00";
-            // 
-            // lblExamine
-            // 
-            lblExamine.AutoSize = true;
-            lblExamine.Font = new Font("Segoe UI", 9F);
-            lblExamine.ForeColor = Color.Gray;
-            lblExamine.Location = new Point(10, 312);
-            lblExamine.Name = "lblExamine";
-            lblExamine.Size = new Size(81, 15);
-            lblExamine.TabIndex = 7;
-            lblExamine.Text = "Examine Item:";
-            // 
-            // cboExamineItem
-            // 
-            cboExamineItem.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboExamineItem.Font = new Font("Segoe UI", 9F);
-            cboExamineItem.FormattingEnabled = true;
-            cboExamineItem.Location = new Point(10, 331);
-            cboExamineItem.Name = "cboExamineItem";
-            cboExamineItem.Size = new Size(210, 23);
-            cboExamineItem.TabIndex = 8;
-            // 
-            // btnExamine
-            // 
-            btnExamine.BackColor = Color.FromArgb(52, 152, 219);
-            btnExamine.Cursor = Cursors.Hand;
-            btnExamine.FlatAppearance.BorderSize = 0;
-            btnExamine.FlatStyle = FlatStyle.Flat;
-            btnExamine.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnExamine.ForeColor = Color.White;
-            btnExamine.Location = new Point(227, 330);
-            btnExamine.Name = "btnExamine";
-            btnExamine.Size = new Size(103, 25);
-            btnExamine.TabIndex = 9;
-            btnExamine.Text = "EXAMINE";
-            btnExamine.UseVisualStyleBackColor = false;
-            btnExamine.Click += btnExamine_Click;
-            // 
-            // recycleGroup
-            // 
-            recycleGroup.Controls.Add(lblRecycleType);
-            recycleGroup.Controls.Add(cboRecycleType);
-            recycleGroup.Controls.Add(lblRecycleQty);
-            recycleGroup.Controls.Add(nudRecycleQty);
-            recycleGroup.Controls.Add(btnRecycle);
-            recycleGroup.Controls.Add(lblRecycleStatus);
-            recycleGroup.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            recycleGroup.Location = new Point(10, 360);
-            recycleGroup.Name = "recycleGroup";
-            recycleGroup.Size = new Size(330, 88);
-            recycleGroup.TabIndex = 10;
-            recycleGroup.TabStop = false;
-            recycleGroup.Text = "Recycle for Credit";
-            // 
-            // lblRecycleType
-            // 
-            lblRecycleType.AutoSize = true;
-            lblRecycleType.Font = new Font("Segoe UI", 9F);
-            lblRecycleType.Location = new Point(9, 23);
-            lblRecycleType.Name = "lblRecycleType";
-            lblRecycleType.Size = new Size(32, 15);
-            lblRecycleType.TabIndex = 0;
-            lblRecycleType.Text = "Type";
-            // 
-            // cboRecycleType
-            // 
+            moneyFlow.Size = new Size(420, 36);
+            moneyFlow.WrapContents = false;
+            moneyFlow.Controls.AddRange(new Control[] { btnMoney20, btnMoney50, btnMoney100, btnMoney200, btnMoney500, btnMoney1000 });
+
+            ConfigureMoneyBtn(btnMoney20,  "₱20",   58);
+            ConfigureMoneyBtn(btnMoney50,  "₱50",   58);
+            ConfigureMoneyBtn(btnMoney100, "₱100",  58);
+            ConfigureMoneyBtn(btnMoney200, "₱200",  58);
+            ConfigureMoneyBtn(btnMoney500, "₱500",  58);
+            ConfigureMoneyBtn(btnMoney1000,"₱1000", 66);
+
+            // ── Coin return ──
+            btnCoinReturn.BackColor = Color.FromArgb(52, 73, 94);
+            btnCoinReturn.FlatStyle = FlatStyle.Flat;
+            btnCoinReturn.FlatAppearance.BorderSize = 0;
+            btnCoinReturn.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            btnCoinReturn.ForeColor = Color.White;
+            btnCoinReturn.Cursor = Cursors.Hand;
+            btnCoinReturn.Location = new Point(440, 80);
+            btnCoinReturn.Name = "btnCoinReturn";
+            btnCoinReturn.Size = new Size(188, 38);
+            btnCoinReturn.Text = "⬇ COIN RETURN";
+            btnCoinReturn.Click += btnCoinReturn_Click;
+
+            // ── Money display position (right side alternative) ──
+            pnlMoneyDisplay.Location = new Point(340, 8);
+            lblMoneyTitle.Location = new Point(12, 62);
+
+            // ── Recycle area ──
+            pnlRecycleArea.BackColor = Color.FromArgb(18, 18, 38);
+            pnlRecycleArea.Location = new Point(12, 8);
+            pnlRecycleArea.Name = "pnlRecycleArea";
+            pnlRecycleArea.Size = new Size(316, 50);
+            pnlRecycleArea.Controls.Add(lblRecycleTitle);
+            pnlRecycleArea.Controls.Add(cboRecycleType);
+            pnlRecycleArea.Controls.Add(nudRecycleQty);
+            pnlRecycleArea.Controls.Add(btnRecycle);
+            pnlRecycleArea.Controls.Add(lblRecycleStatus);
+            //
+            lblRecycleTitle.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            lblRecycleTitle.ForeColor = Color.FromArgb(39, 174, 96);
+            lblRecycleTitle.Location = new Point(6, 3);
+            lblRecycleTitle.Name = "lblRecycleTitle";
+            lblRecycleTitle.Size = new Size(200, 14);
+            lblRecycleTitle.Text = "♻ RECYCLE FOR POINTS";
+            //
+            cboRecycleType.BackColor = Color.FromArgb(14, 14, 32);
             cboRecycleType.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboRecycleType.Font = new Font("Segoe UI", 9F);
-            cboRecycleType.FormattingEnabled = true;
-            cboRecycleType.Location = new Point(58, 20);
+            cboRecycleType.FlatStyle = FlatStyle.Flat;
+            cboRecycleType.Font = new Font("Segoe UI", 8F);
+            cboRecycleType.ForeColor = Color.FromArgb(200, 220, 240);
+            cboRecycleType.Location = new Point(6, 20);
             cboRecycleType.Name = "cboRecycleType";
-            cboRecycleType.Size = new Size(142, 23);
-            cboRecycleType.TabIndex = 1;
-            // 
-            // lblRecycleQty
-            // 
-            lblRecycleQty.AutoSize = true;
-            lblRecycleQty.Font = new Font("Segoe UI", 9F);
-            lblRecycleQty.Location = new Point(202, 24);
-            lblRecycleQty.Name = "lblRecycleQty";
-            lblRecycleQty.Size = new Size(69, 15);
-            lblRecycleQty.TabIndex = 2;
-            lblRecycleQty.Text = "Weight (kg)";
-            // 
-            // nudRecycleQty
-            // 
-            nudRecycleQty.DecimalPlaces = 2;
-            nudRecycleQty.Increment = new decimal(new int[] { 1, 0, 0, 65536 });
-            nudRecycleQty.Location = new Point(272, 21);
-            nudRecycleQty.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
-            nudRecycleQty.Minimum = new decimal(new int[] { 1, 0, 0, 65536 });
+            cboRecycleType.Size = new Size(82, 21);
+            //
+            nudRecycleQty.BackColor = Color.FromArgb(14, 14, 32);
+            nudRecycleQty.DecimalPlaces = 0;
+            nudRecycleQty.Font = new Font("Segoe UI", 8F);
+            nudRecycleQty.ForeColor = Color.FromArgb(200, 220, 240);
+            nudRecycleQty.Increment = 1;
+            nudRecycleQty.Location = new Point(94, 20);
+            nudRecycleQty.Maximum = 500;
+            nudRecycleQty.Minimum = 1;
             nudRecycleQty.Name = "nudRecycleQty";
-            nudRecycleQty.Size = new Size(52, 23);
-            nudRecycleQty.TabIndex = 3;
-            nudRecycleQty.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // btnRecycle
-            // 
+            nudRecycleQty.Size = new Size(50, 22);
+            nudRecycleQty.Value = 1;
+            //
             btnRecycle.BackColor = Color.FromArgb(39, 174, 96);
-            btnRecycle.Cursor = Cursors.Hand;
-            btnRecycle.FlatAppearance.BorderSize = 0;
             btnRecycle.FlatStyle = FlatStyle.Flat;
-            btnRecycle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnRecycle.FlatAppearance.BorderSize = 0;
+            btnRecycle.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
             btnRecycle.ForeColor = Color.White;
-            btnRecycle.Location = new Point(58, 49);
+            btnRecycle.Cursor = Cursors.Hand;
+            btnRecycle.Location = new Point(150, 19);
             btnRecycle.Name = "btnRecycle";
-            btnRecycle.Size = new Size(132, 30);
-            btnRecycle.TabIndex = 4;
-            btnRecycle.Text = "ADD CREDIT";
-            btnRecycle.UseVisualStyleBackColor = false;
+            btnRecycle.Size = new Size(70, 24);
+            btnRecycle.Text = "ADD";
             btnRecycle.Click += btnRecycle_Click;
-            // 
-            // lblRecycleStatus
-            // 
-            lblRecycleStatus.Font = new Font("Segoe UI", 9F);
-            lblRecycleStatus.ForeColor = Color.FromArgb(39, 174, 96);
-            lblRecycleStatus.Location = new Point(196, 53);
+            //
+            lblRecycleStatus.Font = new Font("Segoe UI", 7F);
+            lblRecycleStatus.ForeColor = Color.FromArgb(0, 230, 118);
+            lblRecycleStatus.Location = new Point(226, 22);
             lblRecycleStatus.Name = "lblRecycleStatus";
-            lblRecycleStatus.Size = new Size(119, 23);
-            lblRecycleStatus.TabIndex = 5;
-            lblRecycleStatus.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // btnPurchase
-            // 
-            btnPurchase.BackColor = Color.FromArgb(34, 139, 34);
-            btnPurchase.Cursor = Cursors.Hand;
-            btnPurchase.Enabled = false;
-            btnPurchase.FlatAppearance.BorderSize = 0;
-            btnPurchase.FlatStyle = FlatStyle.Flat;
-            btnPurchase.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnPurchase.ForeColor = Color.White;
-            btnPurchase.Location = new Point(10, 452);
-            btnPurchase.Name = "btnPurchase";
-            btnPurchase.Size = new Size(330, 32);
-            btnPurchase.TabIndex = 11;
-            btnPurchase.Text = "PURCHASE";
-            btnPurchase.UseVisualStyleBackColor = false;
-            btnPurchase.Click += btnPurchase_Click;
-            // 
-            // btnBack
-            // 
-            btnBack.BackColor = Color.FromArgb(52, 73, 94);
-            btnBack.Cursor = Cursors.Hand;
-            btnBack.FlatAppearance.BorderSize = 0;
+            lblRecycleStatus.Size = new Size(86, 18);
+
+            // ── Examine area ──
+            pnlExamineArea.BackColor = Color.FromArgb(18, 18, 38);
+            pnlExamineArea.Location = new Point(12, 122);
+            pnlExamineArea.Name = "pnlExamineArea";
+            pnlExamineArea.Size = new Size(316, 42);
+            pnlExamineArea.Controls.Add(lblExamineTitle);
+            pnlExamineArea.Controls.Add(cboExamineItem);
+            pnlExamineArea.Controls.Add(btnExamine);
+            //
+            lblExamineTitle.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            lblExamineTitle.ForeColor = Color.FromArgb(52, 152, 219);
+            lblExamineTitle.Location = new Point(6, 3);
+            lblExamineTitle.Name = "lblExamineTitle";
+            lblExamineTitle.Size = new Size(130, 14);
+            lblExamineTitle.Text = "🔍 EXAMINE ITEM";
+            //
+            cboExamineItem.BackColor = Color.FromArgb(14, 14, 32);
+            cboExamineItem.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboExamineItem.FlatStyle = FlatStyle.Flat;
+            cboExamineItem.Font = new Font("Segoe UI", 8F);
+            cboExamineItem.ForeColor = Color.FromArgb(200, 220, 240);
+            cboExamineItem.Location = new Point(6, 18);
+            cboExamineItem.Name = "cboExamineItem";
+            cboExamineItem.Size = new Size(140, 21);
+            //
+            btnExamine.BackColor = Color.FromArgb(52, 152, 219);
+            btnExamine.FlatStyle = FlatStyle.Flat;
+            btnExamine.FlatAppearance.BorderSize = 0;
+            btnExamine.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+            btnExamine.ForeColor = Color.White;
+            btnExamine.Cursor = Cursors.Hand;
+            btnExamine.Location = new Point(152, 17);
+            btnExamine.Name = "btnExamine";
+            btnExamine.Size = new Size(72, 24);
+            btnExamine.Text = "EXAMINE";
+            btnExamine.Click += btnExamine_Click;
+
+            // ── Back button ──
+            btnBack.BackColor = Color.FromArgb(42, 42, 62);
             btnBack.FlatStyle = FlatStyle.Flat;
-            btnBack.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnBack.ForeColor = Color.White;
-            btnBack.Location = new Point(10, 490);
+            btnBack.FlatAppearance.BorderSize = 0;
+            btnBack.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            btnBack.ForeColor = Color.FromArgb(180, 190, 210);
+            btnBack.Cursor = Cursors.Hand;
+            btnBack.Location = new Point(12, 172);
             btnBack.Name = "btnBack";
-            btnBack.Size = new Size(160, 32);
-            btnBack.TabIndex = 12;
-            btnBack.Text = "BACK";
-            btnBack.UseVisualStyleBackColor = false;
+            btnBack.Size = new Size(120, 34);
+            btnBack.Text = "◀  BACK";
             btnBack.Click += btnBack_Click;
-            // 
-            // btnClear
-            // 
-            btnClear.BackColor = Color.FromArgb(192, 57, 43);
-            btnClear.Cursor = Cursors.Hand;
-            btnClear.FlatAppearance.BorderSize = 0;
-            btnClear.FlatStyle = FlatStyle.Flat;
-            btnClear.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnClear.ForeColor = Color.White;
-            btnClear.Location = new Point(180, 490);
-            btnClear.Name = "btnClear";
-            btnClear.Size = new Size(160, 32);
-            btnClear.TabIndex = 13;
-            btnClear.Text = "CLEAR CART";
-            btnClear.UseVisualStyleBackColor = false;
-            btnClear.Click += btnClear_Click;
-            // 
+
+            // ════════════════════════════════════════════════
+            // pnlPickupSlot
+            // ════════════════════════════════════════════════
+            pnlPickupSlot.BackColor = Color.FromArgb(4, 4, 12);
+            pnlPickupSlot.Controls.Add(lblPickup);
+            pnlPickupSlot.Controls.Add(picDispense);
+            pnlPickupSlot.Controls.Add(lblDispenseText);
+            pnlPickupSlot.Location = new Point(10, 758);
+            pnlPickupSlot.Name = "pnlPickupSlot";
+            pnlPickupSlot.Size = new Size(640, 90);
+            //
+            lblPickup.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblPickup.ForeColor = Color.FromArgb(50, 60, 80);
+            lblPickup.Location = new Point(0, 0);
+            lblPickup.Name = "lblPickup";
+            lblPickup.Size = new Size(640, 20);
+            lblPickup.Text = "▼  TAKE YOUR ITEM  ▼";
+            lblPickup.TextAlign = ContentAlignment.MiddleCenter;
+            //
+            picDispense.BackColor = Color.FromArgb(4, 4, 12);
+            picDispense.Location = new Point(270, 22);
+            picDispense.Name = "picDispense";
+            picDispense.Size = new Size(60, 60);
+            picDispense.SizeMode = PictureBoxSizeMode.Zoom;
+            picDispense.Visible = false;
+            //
+            lblDispenseText.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblDispenseText.ForeColor = Color.FromArgb(0, 230, 118);
+            lblDispenseText.Location = new Point(0, 2);
+            lblDispenseText.Name = "lblDispenseText";
+            lblDispenseText.Size = new Size(640, 20);
+            lblDispenseText.Text = "";
+            lblDispenseText.TextAlign = ContentAlignment.MiddleCenter;
+            lblDispenseText.Visible = false;
+
+            // ── Footer ──
+            lblFooter.Font = new Font("Segoe UI", 7F);
+            lblFooter.ForeColor = Color.FromArgb(40, 50, 65);
+            lblFooter.Location = new Point(10, 855);
+            lblFooter.Name = "lblFooter";
+            lblFooter.Size = new Size(640, 18);
+            lblFooter.Text = "ECO-MATIC  ●  エコマティック  ●  Recycle ♻ Reward 🌿";
+            lblFooter.TextAlign = ContentAlignment.MiddleCenter;
+
+            // ════════════════════════════════════════════════
             // CustomerForm
-            // 
+            // ════════════════════════════════════════════════
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(245, 250, 245);
-            ClientSize = new Size(980, 590);
-            Controls.Add(paymentGroup);
-            Controls.Add(leftPanel);
-            Controls.Add(menuStrip);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MainMenuStrip = menuStrip;
-            MaximizeBox = false;
+            BackColor = Color.FromArgb(5, 5, 12);
+            ClientSize = new Size(660, 920);
+            FormBorderStyle = FormBorderStyle.Sizable;
+            Controls.Add(pnlMachineBody);
+            Controls.Add(pnlTitleBar);
             Name = "CustomerForm";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "ECO-MATIC  CUSTOMER";
-            menuStrip.ResumeLayout(false);
-            menuStrip.PerformLayout();
-            cartContextMenu.ResumeLayout(false);
-            leftPanel.ResumeLayout(false);
-            productPanel.ResumeLayout(false);
-            paymentGroup.ResumeLayout(false);
-            paymentGroup.PerformLayout();
+            Text = "ECO-MATIC";
+
+            // Resumes
+            pnlTitleBar.ResumeLayout(false);
+            for (int i = 0; i < 12; i++)
+            {
+                var pics = new PictureBox[] { picSlot1, picSlot2, picSlot3, picSlot4, picSlot5, picSlot6, picSlot7, picSlot8, picSlot9, picSlot10, picSlot11, picSlot12 };
+                var pnls = new Panel[] { pnlSlot1, pnlSlot2, pnlSlot3, pnlSlot4, pnlSlot5, pnlSlot6, pnlSlot7, pnlSlot8, pnlSlot9, pnlSlot10, pnlSlot11, pnlSlot12 };
+                ((System.ComponentModel.ISupportInitialize)pics[i]).EndInit();
+                pnls[i].ResumeLayout(false);
+            }
+            pnlCabinetInner.ResumeLayout(false);
+            pnlCabinet.ResumeLayout(false);
             moneyFlow.ResumeLayout(false);
-            recycleGroup.ResumeLayout(false);
-            recycleGroup.PerformLayout();
+            pnlMoneyDisplay.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)nudRecycleQty).EndInit();
+            pnlRecycleArea.ResumeLayout(false);
+            pnlExamineArea.ResumeLayout(false);
+            pnlControlPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picDispense).EndInit();
+            pnlPickupSlot.ResumeLayout(false);
+            pnlHeader.ResumeLayout(false);
+            pnlMachineBody.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
+        }
+
+        /// <summary>Configures a product slot panel with image, labels, and select button.</summary>
+        private void ConfigureSlot(Panel pnl, PictureBox pic, Label lblN, Label lblP, Button btn, string name, int x, int y, int w, int h)
+        {
+            int imgH = 72;
+            int btnH = 26;
+            int btnW = 60;
+
+            pnl.BackColor = Color.FromArgb(18, 18, 42);
+            pnl.Location = new Point(x, y);
+            pnl.Name = name;
+            pnl.Size = new Size(w, h);
+            pnl.Controls.Add(pic);
+            pnl.Controls.Add(lblN);
+            pnl.Controls.Add(lblP);
+            pnl.Controls.Add(btn);
+
+            pic.BackColor = Color.White;
+            pic.Location = new Point(8, 4);
+            pic.Name = "pic" + name.Replace("pnlSlot", "Slot");
+            pic.Size = new Size(w - 16, imgH);
+            pic.SizeMode = PictureBoxSizeMode.Zoom;
+            pic.TabStop = false;
+
+            lblN.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            lblN.ForeColor = Color.FromArgb(220, 230, 245);
+            lblN.Location = new Point(2, imgH + 6);
+            lblN.Name = "lblName" + name.Replace("pnlSlot", "");
+            lblN.Size = new Size(w - 4, 14);
+            lblN.TextAlign = ContentAlignment.MiddleCenter;
+            lblN.Text = "EMPTY";
+
+            lblP.Font = new Font("Segoe UI", 7F);
+            lblP.ForeColor = Color.FromArgb(0, 210, 255);
+            lblP.Location = new Point(2, imgH + 20);
+            lblP.Name = "lblPrice" + name.Replace("pnlSlot", "");
+            lblP.Size = new Size(w - 4, 14);
+            lblP.TextAlign = ContentAlignment.MiddleCenter;
+
+            btn.BackColor = Color.FromArgb(36, 36, 60);
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 1;
+            btn.FlatAppearance.BorderColor = Color.FromArgb(50, 50, 80);
+            btn.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+            btn.ForeColor = Color.FromArgb(140, 150, 170);
+            btn.Location = new Point((w - btnW) / 2, h - btnH - 4);
+            btn.Name = "btnSel" + name.Replace("pnlSlot", "");
+            btn.Size = new Size(btnW, btnH);
+            btn.Cursor = Cursors.Hand;
+            btn.Text = "SELECT";
+        }
+
+        /// <summary>Configures a money denomination button.</summary>
+        private void ConfigureMoneyBtn(Button btn, string text, int w)
+        {
+            btn.BackColor = Color.FromArgb(241, 196, 15);
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            btn.ForeColor = Color.FromArgb(30, 30, 30);
+            btn.Cursor = Cursors.Hand;
+            btn.Margin = new Padding(2);
+            btn.Name = "btn" + text.Replace("₱", "Money");
+            btn.Size = new Size(w, 30);
+            btn.Text = text;
+            btn.Click += btnMoney_Click;
         }
 
         #endregion
 
-        private MenuStrip menuStrip;
-        private ToolStripMenuItem fileMenu;
-        private ToolStripMenuItem backMenuItem;
-        private ToolStripMenuItem openReadmeMenuItem;
-        private ToolStripMenuItem helpMenu;
-        private ToolStripMenuItem howToBuyMenuItem;
-        private ContextMenuStrip cartContextMenu;
-        private ToolStripMenuItem removeItemMenuItem;
-        private ToolStripMenuItem clearAllMenuItem;
-        private Panel leftPanel;
-        private FlowLayoutPanel productPanel;
-        private Button btnProd1;
-        private Button btnProd2;
-        private Button btnProd3;
-        private Button btnProd4;
-        private Button btnProd5;
-        private Button btnProd6;
-        private Button btnProd7;
-        private Button btnProd8;
-        private Button btnProd9;
-        private Button btnProd10;
-        private Button btnProd11;
-        private Button btnProd12;
-        private Button btnProd13;
-        private Button btnProd14;
-        private Button btnProd15;
-        private GroupBox paymentGroup;
-        private Label lblCart;
-        private ListBox cartList;
-        private Label lblTotal;
-        private Label lblInsertHint;
+        // ── Title bar ──
+        private Panel pnlTitleBar;
+        private Label lblTitleBar;
+        private Button btnMinimize;
+        private Button btnClose;
+
+        // ── Machine ──
+        private Panel pnlMachineBody;
+        private Panel pnlHeader;
+        private Label lblBrand;
+        private Label lblJpn;
+        private Panel pnlCabinet;
+        private Panel pnlCabinetInner;
+
+        // ── 12 slots ──
+        private Panel pnlSlot1; private PictureBox picSlot1; private Label lblName1; private Label lblPrice1; private Button btnSel1;
+        private Panel pnlSlot2; private PictureBox picSlot2; private Label lblName2; private Label lblPrice2; private Button btnSel2;
+        private Panel pnlSlot3; private PictureBox picSlot3; private Label lblName3; private Label lblPrice3; private Button btnSel3;
+        private Panel pnlSlot4; private PictureBox picSlot4; private Label lblName4; private Label lblPrice4; private Button btnSel4;
+        private Panel pnlSlot5; private PictureBox picSlot5; private Label lblName5; private Label lblPrice5; private Button btnSel5;
+        private Panel pnlSlot6; private PictureBox picSlot6; private Label lblName6; private Label lblPrice6; private Button btnSel6;
+        private Panel pnlSlot7; private PictureBox picSlot7; private Label lblName7; private Label lblPrice7; private Button btnSel7;
+        private Panel pnlSlot8; private PictureBox picSlot8; private Label lblName8; private Label lblPrice8; private Button btnSel8;
+        private Panel pnlSlot9; private PictureBox picSlot9; private Label lblName9; private Label lblPrice9; private Button btnSel9;
+        private Panel pnlSlot10; private PictureBox picSlot10; private Label lblName10; private Label lblPrice10; private Button btnSel10;
+        private Panel pnlSlot11; private PictureBox picSlot11; private Label lblName11; private Label lblPrice11; private Button btnSel11;
+        private Panel pnlSlot12; private PictureBox picSlot12; private Label lblName12; private Label lblPrice12; private Button btnSel12;
+
+        // ── Control panel ──
+        private Panel pnlControlPanel;
+        private Panel pnlMoneyDisplay;
+        private Label lblMoneyLabel;
+        private Label lblMoneyAmount;
+        private Label lblMoneyTitle;
         private FlowLayoutPanel moneyFlow;
         private Button btnMoney20;
         private Button btnMoney50;
@@ -825,20 +625,33 @@ namespace Eco_Matic_Winforms
         private Button btnMoney200;
         private Button btnMoney500;
         private Button btnMoney1000;
-        private Label lblInserted;
-        private Label lblChange;
-        private Label lblExamine;
-        private ComboBox cboExamineItem;
-        private Button btnExamine;
-        private GroupBox recycleGroup;
-        private Label lblRecycleType;
+        private Button btnCoinReturn;
+
+        // ── Recycle ──
+        private Panel pnlRecycleArea;
+        private Label lblRecycleTitle;
         private ComboBox cboRecycleType;
-        private Label lblRecycleQty;
         private NumericUpDown nudRecycleQty;
         private Button btnRecycle;
         private Label lblRecycleStatus;
-        private Button btnPurchase;
+
+        // ── Examine ──
+        private Panel pnlExamineArea;
+        private Label lblExamineTitle;
+        private ComboBox cboExamineItem;
+        private Button btnExamine;
+
+        // ── Actions ──
         private Button btnBack;
-        private Button btnClear;
+        private Button btnHelp;
+
+        // ── Pickup slot ──
+        private Panel pnlPickupSlot;
+        private Label lblPickup;
+        private PictureBox picDispense;
+        private Label lblDispenseText;
+
+        // ── Footer ──
+        private Label lblFooter;
     }
 }

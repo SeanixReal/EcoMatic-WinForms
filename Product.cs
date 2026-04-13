@@ -17,7 +17,8 @@ namespace Eco_Matic_Winforms
 			int stock,
 			string flavorText,
 			int calories = 0,
-			int volumeMl = 0)
+			int volumeMl = 0,
+			string imagePath = "")
 		{
 			return type switch
 			{
@@ -29,7 +30,8 @@ namespace Eco_Matic_Winforms
 					Stock = stock,
 					FlavorText = flavorText,
 					Calories = calories,
-					VolumeMl = volumeMl
+					VolumeMl = volumeMl,
+					ImagePath = imagePath
 				},
 				ProductType.Snack => new SnackItem
 				{
@@ -38,7 +40,8 @@ namespace Eco_Matic_Winforms
 					Price = price,
 					Stock = stock,
 					FlavorText = flavorText,
-					Calories = calories
+					Calories = calories,
+					ImagePath = imagePath
 				},
 				_ => new MiscItem
 				{
@@ -46,7 +49,8 @@ namespace Eco_Matic_Winforms
 					Name = name,
 					Price = price,
 					Stock = stock,
-					FlavorText = flavorText
+					FlavorText = flavorText,
+					ImagePath = imagePath
 				}
 			};
 		}

@@ -9,14 +9,12 @@ It features a customer purchase interface, admin inventory management, and recei
 This version now includes:
 
 1. Designer-first WinForms UI (no runtime-generated customer/admin controls)
-2. Customer purchase flow with cart and payment validation
-3. Examine Item feature with flavor/details text
-4. Recycle for Credit feature (Plastic, Glass, Aluminum)
+2. Customer purchase flow with money + RFID card points (1 point = 1 peso)
+3. RFID registration/dashboard flow and points save/spend behavior
+4. Recycle for points (Plastic, Glass, Aluminum)
 5. Admin inventory tools (restock-to-max, add item, remove item)
 6. Event log tools (view and clear log)
-7. CSV persistence for inventory and logs
-
-MySQL is still planned for a future increment.
+7. MySQL persistence for inventory, sales, logs, and customers
 
 ## How to Use
 
@@ -54,13 +52,56 @@ MySQL is still planned for a future increment.
 ## Technical Details
 - **Framework**: .NET with Windows Forms
 - **Language**: C#
-- **Data Storage**: CSV files in `bin/Debug/net10.0-windows/data`
+- **Data Storage**: MySQL
 - **Architecture**: Multi-form with shared static DataStore class
 - **Toolbox Controls**: MenuStrip, ContextMenuStrip, Panel, GroupBox, DataGridView
 
-### CSV Files
-1. `inventory.csv` stores current inventory and item metadata
-2. `eventLog.csv` stores customer/admin events with UTC timestamps
+## Laptop Setup And Migration
+
+1. Install MySQL and start the server.
+2. Open a terminal in this project folder.
+3. Set database variables for your laptop.
+
+PowerShell example:
+
+```powershell
+$env:ECOMATIC_DB_HOST = "127.0.0.1"
+$env:ECOMATIC_DB_PORT = "3306"
+$env:ECOMATIC_DB_NAME = "ecomatic_winforms_db"
+$env:ECOMATIC_DB_USER = "root"
+$env:ECOMATIC_DB_PASSWORD = "your_password"
+```
+
+4. Run migration-only startup:
+
+```powershell
+dotnet run -- --migrate
+```
+
+5. Start the app normally:
+
+```powershell
+dotnet run
+```
+
+Optional SQL migration file (manual apply):
+
+`migrations/001_initial_schema.sql`
+
+If you prefer one variable instead of five, set:
+
+`ECOMATIC_DB_CONNECTION_STRING`
+
+Example value:
+
+`Server=127.0.0.1;Port=3306;Database=ecomatic_winforms_db;User ID=root;Password=your_password;SslMode=None;`
+
+## Lint/Build/Push Checklist
+
+1. `dotnet format --verify-no-changes`
+2. `dotnet build`
+3. `git status`
+4. `git push --dry-run`
 
 ## Documentation
 

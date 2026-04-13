@@ -31,13 +31,13 @@ namespace Eco_Matic_Winforms
             colStock = new DataGridViewTextBoxColumn();
             colFlavor = new DataGridViewTextBoxColumn();
             restockGroup = new GroupBox();
+            btnRestockAdd = new Button();
+            lblRestockQty = new Label();
+            nudRestockQty = new NumericUpDown();
             lblItem = new Label();
             cboItem = new ComboBox();
             btnUpdate = new Button();
             btnBack = new Button();
-            lblRestockQty = new Label();
-            nudRestockQty = new NumericUpDown();
-            btnRestockAdd = new Button();
             addGroup = new GroupBox();
             lblAddName = new Label();
             txtAddName = new TextBox();
@@ -53,7 +53,11 @@ namespace Eco_Matic_Winforms
             nudAddCalories = new NumericUpDown();
             lblAddVolume = new Label();
             nudAddVolume = new NumericUpDown();
+            btnBrowseImage = new Button();
+            lblImagePath = new Label();
+            picImagePreview = new PictureBox();
             btnAddItem = new Button();
+            dlgOpenImage = new OpenFileDialog();
             manageGroup = new GroupBox();
             lblRemoveItem = new Label();
             cboRemoveItem = new ComboBox();
@@ -69,6 +73,7 @@ namespace Eco_Matic_Winforms
             ((System.ComponentModel.ISupportInitialize)nudAddStock).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudAddCalories).BeginInit();
             ((System.ComponentModel.ISupportInitialize)nudAddVolume).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picImagePreview).BeginInit();
             manageGroup.SuspendLayout();
             SuspendLayout();
             // 
@@ -197,6 +202,42 @@ namespace Eco_Matic_Winforms
             restockGroup.TabStop = false;
             restockGroup.Text = "Restock Tools";
             // 
+            // btnRestockAdd
+            // 
+            btnRestockAdd.BackColor = Color.FromArgb(46, 204, 113);
+            btnRestockAdd.FlatAppearance.BorderSize = 0;
+            btnRestockAdd.FlatStyle = FlatStyle.Flat;
+            btnRestockAdd.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnRestockAdd.ForeColor = Color.White;
+            btnRestockAdd.Location = new Point(610, 64);
+            btnRestockAdd.Name = "btnRestockAdd";
+            btnRestockAdd.Size = new Size(246, 30);
+            btnRestockAdd.TabIndex = 6;
+            btnRestockAdd.Text = "ADD STOCK";
+            btnRestockAdd.UseVisualStyleBackColor = false;
+            btnRestockAdd.Click += btnRestockAdd_Click;
+            // 
+            // lblRestockQty
+            // 
+            lblRestockQty.AutoSize = true;
+            lblRestockQty.Font = new Font("Segoe UI", 10F);
+            lblRestockQty.Location = new Point(357, 34);
+            lblRestockQty.Name = "lblRestockQty";
+            lblRestockQty.Size = new Size(61, 19);
+            lblRestockQty.TabIndex = 4;
+            lblRestockQty.Text = "Add Qty";
+            // 
+            // nudRestockQty
+            // 
+            nudRestockQty.Font = new Font("Segoe UI", 10F);
+            nudRestockQty.Location = new Point(419, 30);
+            nudRestockQty.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
+            nudRestockQty.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            nudRestockQty.Name = "nudRestockQty";
+            nudRestockQty.Size = new Size(75, 25);
+            nudRestockQty.TabIndex = 5;
+            nudRestockQty.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
             // lblItem
             // 
             lblItem.AutoSize = true;
@@ -247,42 +288,6 @@ namespace Eco_Matic_Winforms
             btnBack.UseVisualStyleBackColor = false;
             btnBack.Click += btnBack_Click;
             // 
-            // lblRestockQty
-            // 
-            lblRestockQty.AutoSize = true;
-            lblRestockQty.Font = new Font("Segoe UI", 10F);
-            lblRestockQty.Location = new Point(357, 34);
-            lblRestockQty.Name = "lblRestockQty";
-            lblRestockQty.Size = new Size(56, 19);
-            lblRestockQty.TabIndex = 4;
-            lblRestockQty.Text = "Add Qty";
-            // 
-            // nudRestockQty
-            // 
-            nudRestockQty.Font = new Font("Segoe UI", 10F);
-            nudRestockQty.Location = new Point(419, 30);
-            nudRestockQty.Maximum = new decimal(new int[] { 15, 0, 0, 0 });
-            nudRestockQty.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            nudRestockQty.Name = "nudRestockQty";
-            nudRestockQty.Size = new Size(75, 25);
-            nudRestockQty.TabIndex = 5;
-            nudRestockQty.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
-            // btnRestockAdd
-            // 
-            btnRestockAdd.BackColor = Color.FromArgb(46, 204, 113);
-            btnRestockAdd.FlatAppearance.BorderSize = 0;
-            btnRestockAdd.FlatStyle = FlatStyle.Flat;
-            btnRestockAdd.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            btnRestockAdd.ForeColor = Color.White;
-            btnRestockAdd.Location = new Point(610, 64);
-            btnRestockAdd.Name = "btnRestockAdd";
-            btnRestockAdd.Size = new Size(246, 30);
-            btnRestockAdd.TabIndex = 6;
-            btnRestockAdd.Text = "ADD STOCK";
-            btnRestockAdd.UseVisualStyleBackColor = false;
-            btnRestockAdd.Click += btnRestockAdd_Click;
-            // 
             // addGroup
             // 
             addGroup.Controls.Add(lblAddName);
@@ -299,12 +304,15 @@ namespace Eco_Matic_Winforms
             addGroup.Controls.Add(nudAddCalories);
             addGroup.Controls.Add(lblAddVolume);
             addGroup.Controls.Add(nudAddVolume);
+            addGroup.Controls.Add(btnBrowseImage);
+            addGroup.Controls.Add(lblImagePath);
+            addGroup.Controls.Add(picImagePreview);
             addGroup.Controls.Add(btnAddItem);
             addGroup.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             addGroup.ForeColor = Color.FromArgb(52, 73, 94);
             addGroup.Location = new Point(15, 421);
             addGroup.Name = "addGroup";
-            addGroup.Size = new Size(520, 186);
+            addGroup.Size = new Size(520, 230);
             addGroup.TabIndex = 3;
             addGroup.TabStop = false;
             addGroup.Text = "Add Item";
@@ -332,7 +340,7 @@ namespace Eco_Matic_Winforms
             lblAddType.Font = new Font("Segoe UI", 9F);
             lblAddType.Location = new Point(275, 28);
             lblAddType.Name = "lblAddType";
-            lblAddType.Size = new Size(31, 15);
+            lblAddType.Size = new Size(32, 15);
             lblAddType.TabIndex = 2;
             lblAddType.Text = "Type";
             // 
@@ -375,7 +383,7 @@ namespace Eco_Matic_Winforms
             lblAddStock.Font = new Font("Segoe UI", 9F);
             lblAddStock.Location = new Point(195, 58);
             lblAddStock.Name = "lblAddStock";
-            lblAddStock.Size = new Size(35, 15);
+            lblAddStock.Size = new Size(36, 15);
             lblAddStock.TabIndex = 6;
             lblAddStock.Text = "Stock";
             // 
@@ -396,7 +404,7 @@ namespace Eco_Matic_Winforms
             lblAddFlavor.Font = new Font("Segoe UI", 9F);
             lblAddFlavor.Location = new Point(15, 89);
             lblAddFlavor.Name = "lblAddFlavor";
-            lblAddFlavor.Size = new Size(70, 15);
+            lblAddFlavor.Size = new Size(67, 15);
             lblAddFlavor.TabIndex = 8;
             lblAddFlavor.Text = "Description";
             // 
@@ -413,7 +421,7 @@ namespace Eco_Matic_Winforms
             lblAddCalories.Font = new Font("Segoe UI", 9F);
             lblAddCalories.Location = new Point(15, 121);
             lblAddCalories.Name = "lblAddCalories";
-            lblAddCalories.Size = new Size(53, 15);
+            lblAddCalories.Size = new Size(49, 15);
             lblAddCalories.TabIndex = 10;
             lblAddCalories.Text = "Calories";
             // 
@@ -445,6 +453,42 @@ namespace Eco_Matic_Winforms
             nudAddVolume.Size = new Size(110, 23);
             nudAddVolume.TabIndex = 13;
             // 
+            // btnBrowseImage
+            // 
+            btnBrowseImage.BackColor = Color.FromArgb(41, 128, 185);
+            btnBrowseImage.FlatAppearance.BorderSize = 0;
+            btnBrowseImage.FlatStyle = FlatStyle.Flat;
+            btnBrowseImage.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnBrowseImage.ForeColor = Color.White;
+            btnBrowseImage.Location = new Point(15, 154);
+            btnBrowseImage.Name = "btnBrowseImage";
+            btnBrowseImage.Size = new Size(110, 26);
+            btnBrowseImage.TabIndex = 14;
+            btnBrowseImage.Text = "Browse Image...";
+            btnBrowseImage.UseVisualStyleBackColor = false;
+            btnBrowseImage.Click += btnBrowseImage_Click;
+            // 
+            // lblImagePath
+            // 
+            lblImagePath.Font = new Font("Segoe UI", 8F);
+            lblImagePath.ForeColor = Color.Gray;
+            lblImagePath.Location = new Point(131, 161);
+            lblImagePath.Name = "lblImagePath";
+            lblImagePath.Size = new Size(290, 18);
+            lblImagePath.TabIndex = 15;
+            lblImagePath.Text = "No image selected";
+            // 
+            // picImagePreview
+            // 
+            picImagePreview.BackColor = Color.FromArgb(240, 240, 240);
+            picImagePreview.BorderStyle = BorderStyle.FixedSingle;
+            picImagePreview.Location = new Point(426, 123);
+            picImagePreview.Name = "picImagePreview";
+            picImagePreview.Size = new Size(77, 60);
+            picImagePreview.SizeMode = PictureBoxSizeMode.Zoom;
+            picImagePreview.TabIndex = 16;
+            picImagePreview.TabStop = false;
+            // 
             // btnAddItem
             // 
             btnAddItem.BackColor = Color.FromArgb(39, 174, 96);
@@ -452,13 +496,18 @@ namespace Eco_Matic_Winforms
             btnAddItem.FlatStyle = FlatStyle.Flat;
             btnAddItem.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             btnAddItem.ForeColor = Color.White;
-            btnAddItem.Location = new Point(15, 149);
+            btnAddItem.Location = new Point(15, 192);
             btnAddItem.Name = "btnAddItem";
             btnAddItem.Size = new Size(487, 30);
-            btnAddItem.TabIndex = 14;
+            btnAddItem.TabIndex = 17;
             btnAddItem.Text = "ADD ITEM";
             btnAddItem.UseVisualStyleBackColor = false;
             btnAddItem.Click += btnAddItem_Click;
+            // 
+            // dlgOpenImage
+            // 
+            dlgOpenImage.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.bmp;*.gif|All Files|*.*";
+            dlgOpenImage.Title = "Select Product Image";
             // 
             // manageGroup
             // 
@@ -482,7 +531,7 @@ namespace Eco_Matic_Winforms
             lblRemoveItem.Font = new Font("Segoe UI", 9F);
             lblRemoveItem.Location = new Point(12, 30);
             lblRemoveItem.Name = "lblRemoveItem";
-            lblRemoveItem.Size = new Size(75, 15);
+            lblRemoveItem.Size = new Size(77, 15);
             lblRemoveItem.TabIndex = 0;
             lblRemoveItem.Text = "Remove item";
             // 
@@ -546,7 +595,7 @@ namespace Eco_Matic_Winforms
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(245, 250, 245);
-            ClientSize = new Size(900, 620);
+            ClientSize = new Size(900, 665);
             Controls.Add(manageGroup);
             Controls.Add(addGroup);
             Controls.Add(restockGroup);
@@ -570,6 +619,7 @@ namespace Eco_Matic_Winforms
             ((System.ComponentModel.ISupportInitialize)nudAddStock).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudAddCalories).EndInit();
             ((System.ComponentModel.ISupportInitialize)nudAddVolume).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picImagePreview).EndInit();
             manageGroup.ResumeLayout(false);
             manageGroup.PerformLayout();
             ResumeLayout(false);
@@ -614,6 +664,10 @@ namespace Eco_Matic_Winforms
         private NumericUpDown nudAddCalories;
         private Label lblAddVolume;
         private NumericUpDown nudAddVolume;
+        private Button btnBrowseImage;
+        private Label lblImagePath;
+        private PictureBox picImagePreview;
+        private OpenFileDialog dlgOpenImage;
         private Button btnAddItem;
         private GroupBox manageGroup;
         private Label lblRemoveItem;

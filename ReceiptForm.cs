@@ -44,7 +44,7 @@ namespace Eco_Matic_Winforms
 
             foreach (var recycle in _transaction.RecycledItems)
             {
-                string line = $"Recycle {recycle.Material,-8} {recycle.WeightKg,5:F2}kg +₱{recycle.TotalCredit:F2}";
+                string line = $"Recycle {recycle.Material,-8} {recycle.Pieces,4}pc +{recycle.TotalPoints} PTS";
                 var lbl = new Label
                 {
                     Text = line,

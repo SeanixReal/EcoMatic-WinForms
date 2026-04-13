@@ -5,16 +5,19 @@ namespace Eco_Matic_Winforms
 {
     public static class CsvStorage
     {
-        private const string InventoryHeader = "Id,Type,Name,Price,Stock,FlavorText,Calories,VolumeMl";
+        private const string InventoryHeader = "Id,Type,Name,Price,Stock,FlavorText,Calories,VolumeMl,ImagePath";
         private const string EventLogHeader = "TimestampUtc,EventType,Details,Amount";
 
         private static string DataDirectory => Path.Combine(AppContext.BaseDirectory, "data");
+        public static string ImageDirectory => Path.Combine(DataDirectory, "images");
+        private static string AssetImageDirectory => Path.Combine(AppContext.BaseDirectory, "Assets", "Images");
         private static string InventoryPath => Path.Combine(DataDirectory, "inventory.csv");
         private static string EventLogPath => Path.Combine(DataDirectory, "eventLog.csv");
 
         public static List<Product> LoadInventory(List<Product> fallback)
         {
             Directory.CreateDirectory(DataDirectory);
+            Directory.CreateDirectory(ImageDirectory);
 
             if (!File.Exists(InventoryPath))
             {
@@ -66,6 +69,8 @@ namespace Eco_Matic_Winforms
                 _ = int.TryParse(fields[6], out int calories);
                 _ = int.TryParse(fields[7], out int volumeMl);
 
+                string imagePath = fields.Count > 8 ? fields[8] : string.Empty;
+
                 stock = Math.Clamp(stock, 0, DataStore.MaxStockPerItem);
 
                 products.Add(Product.Create(
@@ -76,7 +81,8 @@ namespace Eco_Matic_Winforms
                     stock,
                     fields[5],
                     calories,
-                    volumeMl));
+                    volumeMl,
+                    imagePath));
             }
 
             if (products.Count == 0)
@@ -94,6 +100,7 @@ namespace Eco_Matic_Winforms
         public static void SaveInventory(IEnumerable<Product> products)
         {
             Directory.CreateDirectory(DataDirectory);
+            Directory.CreateDirectory(ImageDirectory);
             using var writer = new StreamWriter(InventoryPath, false, Encoding.UTF8);
             writer.WriteLine(InventoryHeader);
 
@@ -110,7 +117,8 @@ namespace Eco_Matic_Winforms
                     product.Stock,
                     Escape(product.FlavorText),
                     calories,
-                    volumeMl));
+                    volumeMl,
+                    Escape(product.ImagePath)));
             }
         }
 
@@ -181,6 +189,105 @@ namespace Eco_Matic_Winforms
             File.WriteAllText(EventLogPath, EventLogHeader + Environment.NewLine);
         }
 
+        /// <summary>
+        /// Copies the given source image to the data/images folder with a product-ID-based name.
+        /// Returns the relative file name (e.g. "5.png").
+        /// </summary>
+        public static string CopyProductImage(string sourceFilePath, int productId)
+        {
+            Directory.CreateDirectory(ImageDirectory);
+            string ext = Path.GetExtension(sourceFilePath).ToLower();
+            string destFileName = $"{productId}{ext}";
+            string destPath = Path.Combine(ImageDirectory, destFileName);
+
+            File.Copy(sourceFilePath, destPath, overwrite: true);
+            return destFileName;
+        }
+
+        /// <summary>
+        /// Resolves a relative image file name to its full absolute path.
+        /// </summary>
+        public static string GetImageFullPath(string relativeFileName, string? productName = null)
+        {
+            if (!string.IsNullOrWhiteSpace(relativeFileName))
+            {
+                if (Path.IsPathRooted(relativeFileName) && File.Exists(relativeFileName))
+                {
+                    return relativeFileName;
+                }
+
+                string inData = Path.Combine(ImageDirectory, relativeFileName);
+                if (File.Exists(inData))
+                {
+                    return inData;
+                }
+
+                string inAssets = Path.Combine(AssetImageDirectory, relativeFileName);
+                if (File.Exists(inAssets))
+                {
+                    return inAssets;
+                }
+            }
+
+            string guessed = ResolveAssetImageByProductName(productName);
+            return guessed;
+        }
+
+        private static string ResolveAssetImageByProductName(string? productName)
+        {
+            if (string.IsNullOrWhiteSpace(productName) || !Directory.Exists(AssetImageDirectory))
+            {
+                return string.Empty;
+            }
+
+            var aliases = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["fudgebar"] = "KitKat.png",
+                ["mrchips"] = "MrChips.png",
+                ["cocacola"] = "CocaCola.png",
+                ["rccola"] = "RCCola.png",
+                ["ecobag"] = "EcoBag.png",
+                ["bandaidbox"] = "BandaidBox.png",
+                ["rollercoaster"] = "RollerCoaster.png",
+                ["cheesering"] = "CheeseRing.png"
+            };
+
+            string normalizedProduct = NormalizeForMatch(productName);
+
+            if (aliases.TryGetValue(normalizedProduct, out string? aliasedFile) && !string.IsNullOrWhiteSpace(aliasedFile))
+            {
+                string aliasPath = Path.Combine(AssetImageDirectory, aliasedFile);
+                if (File.Exists(aliasPath))
+                {
+                    return aliasPath;
+                }
+            }
+
+            foreach (string file in Directory.GetFiles(AssetImageDirectory))
+            {
+                string fileName = Path.GetFileNameWithoutExtension(file);
+                if (NormalizeForMatch(fileName).Equals(normalizedProduct, StringComparison.OrdinalIgnoreCase))
+                {
+                    return file;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static string NormalizeForMatch(string value)
+        {
+            var sb = new StringBuilder(value.Length);
+            foreach (char c in value)
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    sb.Append(char.ToLowerInvariant(c));
+                }
+            }
+            return sb.ToString();
+        }
+
         private static List<string> ParseLine(string line)
         {
             var fields = new List<string>();
@@ -230,7 +337,8 @@ namespace Eco_Matic_Winforms
                     p.Stock,
                     p.FlavorText,
                     p is IHasCalories c ? c.Calories : 0,
-                    p is IHasVolume v ? v.VolumeMl : 0))
+                    p is IHasVolume v ? v.VolumeMl : 0,
+                    p.ImagePath))
                 .ToList();
         }
     }
