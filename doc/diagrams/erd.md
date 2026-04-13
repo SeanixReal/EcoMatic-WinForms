@@ -1,36 +1,54 @@
-# ERD (Planned for MySQL in Increment 2)
+# ERD (MySQL Database)
+
+This ERD represents the current MySQL schema used by the application, reflecting the final implementation.
 
 ```mermaid
 erDiagram
-    PRODUCT {
-        int id PK
-        string name
+    inventory_items {
+        int inventory_id PK
+        int slot_id
+        varchar type
+        varchar name
         decimal price
         int stock
+        text flavor_text
+        int calories
+        int volume_ml
+        varchar image_path
+        timestamp created_at
+        timestamp updated_at
     }
 
-    TRANSACTION {
-        int id PK
-        datetime transaction_date
-        decimal total_amount
-        decimal amount_paid
-        decimal change_amount
-    }
-
-    TRANSACTION_ITEM {
-        int id PK
-        int transaction_id FK
-        int product_id FK
+    sales_transactions {
+        int transaction_id PK
+        int inventory_id FK
+        int slot_id
+        varchar item_name
         int quantity
-        decimal unit_price
-        decimal line_total
+        decimal amount_paid
+        timestamp transaction_date
     }
 
-    PRODUCT ||--o{ TRANSACTION_ITEM : appears_in
-    TRANSACTION ||--|{ TRANSACTION_ITEM : contains
+    event_logs {
+        int log_id PK
+        datetime timestamp_utc
+        varchar event_type
+        text details
+        decimal amount
+    }
+
+    customers {
+        varchar rfid_tag PK
+        varchar email
+        varchar password_hash
+        int eco_credits
+        timestamp registered_date
+    }
+
+    schema_migrations {
+        varchar migration_id PK
+        datetime applied_utc
+    }
+
+    inventory_items ||--o{ sales_transactions : has
 ```
-
-## Note
-
-This ERD is for Increment 2 database implementation.
-Increment 1 still uses in-memory lists in `DataStore`.

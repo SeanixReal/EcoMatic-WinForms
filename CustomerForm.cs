@@ -528,15 +528,15 @@ namespace Eco_Matic_Winforms
 
         private void UpdateMoneyDisplay()
         {
+            lblMoneyLabel.Text = "CASH / POINTS:";
+
             if (!string.IsNullOrWhiteSpace(_activeRfid))
             {
-                lblMoneyLabel.Text = "CASH + CARD:";
-                lblMoneyAmount.Text = $"₱{_insertedMoney:F2} + {_cardPointsBalance} PTS";
+                lblMoneyAmount.Text = $"₱{_insertedMoney:F2} | C:{_cardPointsBalance} S:{DataStore.PendingPoints}";
             }
             else
             {
-                lblMoneyLabel.Text = "INSERTED:";
-                lblMoneyAmount.Text = $"₱{_insertedMoney:F2}";
+                lblMoneyAmount.Text = $"₱{_insertedMoney:F2} | S:{DataStore.PendingPoints}";
             }
         }
 

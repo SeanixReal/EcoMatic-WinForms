@@ -40,7 +40,7 @@ This version now includes:
 
 ## Product Rules
 1. The machine starts with 15 items.
-2. Maximum item slots: 30
+2. Maximum item slots: 12
 3. Maximum stock per item: 15
 4. All prices are in Philippine Peso (₱).
 
@@ -94,7 +94,7 @@ If you prefer one variable instead of five, set:
 
 Example value:
 
-`Server=127.0.0.1;Port=3306;Database=ecomatic_winforms_db;User ID=root;Password=your_password;SslMode=None;`
+`Server=127.0.0.1;Port=3306;Database=ecomatic_winforms_db;User ID=root;Password=your_password;SslMode=Disabled;`
 
 ## Lint/Build/Push Checklist
 

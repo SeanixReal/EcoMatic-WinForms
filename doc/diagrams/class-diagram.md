@@ -8,12 +8,30 @@ classDiagram
 
     class MainForm {
         -AdminPassword : string
+        -ArduinoService _arduino
         -UpdateExitButton()
         +btnCustomer_Click()
         +btnAdmin_Click()
         +btnExit_Click()
         +aboutMenuItem_Click()
-        +openReadmeMenuItem_Click()
+        +Arduino_OnCardScanned()
+    }
+
+    class ArduinoService {
+        +OnCardScanned: Action~string~
+        +StartListening()
+        +StopListening()
+    }
+
+    class CustomerRegistrationForm {
+        +btnRegister_Click()
+        +btnCancel_Click()
+    }
+
+    class CustomerDashboardForm {
+        +btnShop_Click()
+        +btnLogout_Click()
+        +RefreshCustomerInfo()
     }
 
     class LoginForm {
@@ -28,76 +46,46 @@ classDiagram
         -_insertedMoney : decimal
         -InitializeProductButtons()
         -InitializeSelectors()
-        -RefreshExamineOptions()
         -RefreshProducts()
-        -ProductCard_Click()
         +btnMoney_Click()
         +btnExamine_Click()
         +btnRecycle_Click()
-        -GetCartTotal() decimal
-        -UpdateCartDisplay()
-        -UpdatePaymentDisplay()
         +btnPurchase_Click()
     }
 
     class AdminForm {
         +OnLoad(EventArgs)
         -RefreshGrid()
-        -LoadAddTypeSelector()
-        -RefreshSelectors()
-        -SelectComboById(ComboBox,int) bool
-        -SelectFromGrid(int)
-        -SyncSelectorsFromGridSelection()
-        +inventoryGrid_CellClick(object,DataGridViewCellEventArgs)
-        +inventoryGrid_SelectionChanged(object,EventArgs)
-        +btnUpdate_Click()
-        +btnRestockAdd_Click()
         +btnAddItem_Click()
         +btnRemoveItem_Click()
         +btnViewLog_Click()
-        +btnClearLog_Click()
-        +cboAddType_SelectedIndexChanged(object,EventArgs)
-        -UpdateTypeSpecificFields()
-        +btnBack_Click()
-    }
-
-    class EventLogForm {
-        -LoadLogs()
-        +btnRefresh_Click()
-        +btnClose_Click()
-    }
-
-    class ReceiptForm {
-        -_transaction : Transaction?
-        -PopulateReceipt()
-    }
-
-    class ReadmeForm {
-        +btnClose_Click()
     }
 
     class DataStore {
-        +MaxItemSlots : int
-        +MaxStockPerItem : int
-        +RecycleRates : IReadOnlyDictionary
         +Products : List~Product~
         +Transactions : List~Transaction~
         +NextTransactionId : int
         +LastTransaction : Transaction?
+        +ActiveCustomerRfid : string?
         +Initialize()
         +SaveInventory()
+        +CustomerExists(string) bool
         +LogEvent(string,string,decimal)
-        +ReadLogs() List~EventLogEntry~
-        +ClearLogs()
+    }
+
+    class MySqlStore {
+        +GetConnection() MySqlConnection
+        +EnsureDatabaseReady()
+        +LoadInventory() List~Product~
+        +SaveInventory(IEnumerable~Product~)
+        +CustomerExists(string) bool
+        +RegisterCustomer(string, string, string) bool
+        +GetCustomerInfo(string) Tuple
     }
 
     class CsvStorage {
         +LoadInventory(List~Product~) List~Product~
         +SaveInventory(IEnumerable~Product~)
-        +EnsureEventLogFile()
-        +LoadEventLog() List~EventLogEntry~
-        +AppendEvent(EventLogEntry)
-        +ClearEventLog()
     }
 
     class ProductType {
@@ -114,16 +102,6 @@ classDiagram
         Aluminum
     }
 
-    class IHasVolume {
-        <<interface>>
-        +VolumeMl : int
-    }
-
-    class IHasCalories {
-        <<interface>>
-        +Calories : int
-    }
-
     class VendingItem {
         <<abstract>>
         +Id : int
@@ -137,8 +115,7 @@ classDiagram
 
     class Product {
         +Type : ProductType
-        +Product(ProductType)
-        +Create(ProductType,int,string,decimal,int,string,int,int) Product
+        +Create() Product
     }
 
     class SnackItem {
@@ -165,63 +142,31 @@ classDiagram
         +Change : decimal
     }
 
-    class TransactionItem {
-        +ProductId : int
-        +ProductName : string
-        +Quantity : int
-        +UnitPrice : decimal
-        +LineTotal : decimal
-    }
-
-    class RecycleEntry {
-        +Material : RecycleMaterial
-        +WeightKg : decimal
-        +CreditPerKg : decimal
-        +TotalCredit : decimal
-    }
-
-    class EventLogEntry {
-        +TimestampUtc : DateTime
-        +EventType : string
-        +Details : string
-        +Amount : decimal
-    }
-
     Program --> MainForm
     Program ..> DataStore
+    MainForm --> ArduinoService
     MainForm --> LoginForm
+    MainForm --> CustomerRegistrationForm
+    MainForm --> CustomerDashboardForm
     MainForm --> CustomerForm
     MainForm --> AdminForm
-    MainForm --> ReceiptForm
-    MainForm --> ReadmeForm
 
+    CustomerRegistrationForm ..> DataStore
+    CustomerDashboardForm ..> DataStore
     CustomerForm ..> DataStore
     CustomerForm ..> Product
     CustomerForm ..> Transaction
-    CustomerForm ..> RecycleEntry
     AdminForm ..> DataStore
     AdminForm ..> Product
-    AdminForm --> EventLogForm
-    EventLogForm ..> DataStore
-    EventLogForm ..> EventLogEntry
-    ReceiptForm ..> Transaction
 
+    DataStore --> MySqlStore
     DataStore ..> CsvStorage
-    DataStore ..> EventLogEntry
-    DataStore ..> RecycleMaterial
-    CsvStorage ..> Product
-    CsvStorage ..> EventLogEntry
 
     Product --|> VendingItem
     SnackItem --|> Product
     DrinkItem --|> Product
     MiscItem --|> Product
-    SnackItem ..|> IHasCalories
-    DrinkItem ..|> IHasCalories
-    DrinkItem ..|> IHasVolume
 
     DataStore "1" --> "many" Product
     DataStore "1" --> "many" Transaction
-    Transaction "1" --> "many" TransactionItem
-    Transaction "1" --> "many" RecycleEntry
 ```

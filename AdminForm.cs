@@ -247,6 +247,7 @@ namespace Eco_Matic_Winforms
         {
             SelectComboById(cboItem, productId);
             SelectComboById(cboRemoveItem, productId);
+            LoadEditorFromProduct(productId);
         }
 
         private void SyncSelectorsFromGridSelection()
@@ -270,6 +271,62 @@ namespace Eco_Matic_Winforms
         private void inventoryGrid_SelectionChanged(object sender, EventArgs e)
         {
             SyncSelectorsFromGridSelection();
+        }
+
+        private Product? GetSelectedProductFromGrid()
+        {
+            if (inventoryGrid.SelectedRows.Count == 0) return null;
+            object? value = inventoryGrid.SelectedRows[0].Cells[colId.Index].Value;
+            if (value == null) return null;
+            if (!int.TryParse(value.ToString(), out int productId)) return null;
+            return DataStore.Products.FirstOrDefault(p => p.Id == productId);
+        }
+
+        private void LoadEditorFromProduct(int productId)
+        {
+            var product = DataStore.Products.FirstOrDefault(p => p.Id == productId);
+            if (product == null) return;
+
+            txtAddName.Text = product.Name;
+            cboAddType.SelectedItem = product.Type;
+            nudAddPrice.Value = Math.Clamp(product.Price, nudAddPrice.Minimum, nudAddPrice.Maximum);
+            nudAddStock.Value = Math.Clamp(product.Stock, (int)nudAddStock.Minimum, (int)nudAddStock.Maximum);
+            txtAddFlavor.Text = product.FlavorText;
+            nudEditSlotId.Value = Math.Clamp(product.Id, (int)nudEditSlotId.Minimum, (int)nudEditSlotId.Maximum);
+
+            nudAddCalories.Value = product is IHasCalories hasCalories
+                ? Math.Clamp(hasCalories.Calories, (int)nudAddCalories.Minimum, (int)nudAddCalories.Maximum)
+                : 0;
+
+            nudAddVolume.Value = product is IHasVolume hasVolume
+                ? Math.Clamp(hasVolume.VolumeMl, (int)nudAddVolume.Minimum, (int)nudAddVolume.Maximum)
+                : 0;
+
+            _selectedImagePath = null;
+            lblImagePath.Text = string.IsNullOrWhiteSpace(product.ImagePath) ? "No image selected" : product.ImagePath;
+            LoadPreviewImage(CsvStorage.GetImageFullPath(product.ImagePath, product.Name));
+            UpdateTypeSpecificFields();
+        }
+
+        private void LoadPreviewImage(string fullPath)
+        {
+            if (picImagePreview.Image != null)
+            {
+                picImagePreview.Image.Dispose();
+                picImagePreview.Image = null;
+            }
+
+            if (!File.Exists(fullPath)) return;
+
+            try
+            {
+                using var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read);
+                picImagePreview.Image = Image.FromStream(stream);
+            }
+            catch
+            {
+                picImagePreview.Image = null;
+            }
         }
 
         #endregion
@@ -322,7 +379,10 @@ namespace Eco_Matic_Winforms
 
         private void btnAddItem_Click(object sender, EventArgs e)
         {
-            if (DataStore.Products.Count >= DataStore.MaxItemSlots)
+            int? nextSlotId = Enumerable.Range(1, DataStore.MaxItemSlots)
+                .FirstOrDefault(id => DataStore.Products.All(p => p.Id != id));
+
+            if (nextSlotId == 0)
             {
                 MessageBox.Show($"Max slots ({DataStore.MaxItemSlots}) reached.", "Add Item",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -348,7 +408,7 @@ namespace Eco_Matic_Winforms
 
             int stock = Math.Clamp((int)nudAddStock.Value, 1, DataStore.MaxStockPerItem);
             string flavor = string.IsNullOrWhiteSpace(txtAddFlavor.Text) ? "No description available." : txtAddFlavor.Text.Trim();
-            int newId = DataStore.Products.Count == 0 ? 1 : DataStore.Products.Max(p => p.Id) + 1;
+            int newId = nextSlotId.Value;
 
             var newProduct = Product.Create(type, newId, name, price, stock, flavor,
                 type == ProductType.Snack ? (int)nudAddCalories.Value : 0,
@@ -388,6 +448,91 @@ namespace Eco_Matic_Winforms
             UpdateTypeSpecificFields();
 
             RefreshGrid(); RefreshSelectors(); SelectFromGrid(newProduct.Id);
+        }
+
+        private void btnUpdateItem_Click(object sender, EventArgs e)
+        {
+            var selectedProduct = GetSelectedProductFromGrid();
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("Select an item from the grid to update.", "Update Item",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int targetId = (int)nudEditSlotId.Value;
+            if (targetId < 1 || targetId > DataStore.MaxItemSlots)
+            {
+                MessageBox.Show($"Slot ID must be between 1 and {DataStore.MaxItemSlots}.", "Update Item",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (targetId != selectedProduct.Id && DataStore.Products.Any(p => p.Id == targetId))
+            {
+                MessageBox.Show($"Slot #{targetId} is already occupied.", "Update Item",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string name = txtAddName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                MessageBox.Show("Name is required.", "Update Item", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (DataStore.Products.Any(p => p.Id != selectedProduct.Id && p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show("Name must be unique.", "Update Item", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cboAddType.SelectedItem is not ProductType type) return;
+            decimal price = nudAddPrice.Value;
+            if (price <= 0m)
+            {
+                MessageBox.Show("Price must be greater than zero.", "Update Item", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int stock = Math.Clamp((int)nudAddStock.Value, 0, DataStore.MaxStockPerItem);
+            string flavor = string.IsNullOrWhiteSpace(txtAddFlavor.Text) ? "No description available." : txtAddFlavor.Text.Trim();
+
+            string imagePath = selectedProduct.ImagePath;
+            if (!string.IsNullOrWhiteSpace(_selectedImagePath) && File.Exists(_selectedImagePath))
+            {
+                try
+                {
+                    imagePath = CsvStorage.CopyProductImage(_selectedImagePath, targetId);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Image error: {ex.Message}", "Warning",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+
+            var updatedProduct = Product.Create(type, targetId, name, price, stock, flavor,
+                type == ProductType.Snack ? (int)nudAddCalories.Value : 0,
+                type == ProductType.Drink ? (int)nudAddVolume.Value : 0,
+                imagePath);
+            updatedProduct.DbInventoryId = selectedProduct.DbInventoryId;
+
+            int index = DataStore.Products.IndexOf(selectedProduct);
+            if (index < 0) return;
+
+            int oldId = selectedProduct.Id;
+            DataStore.Products[index] = updatedProduct;
+            DataStore.SaveInventory();
+            DataStore.LogEvent("ADMIN_UPDATE_ITEM", $"{selectedProduct.Name} updated (slot {oldId} -> {updatedProduct.Id})", updatedProduct.Price);
+
+            MessageBox.Show("Item updated.", "Update Item", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            _selectedImagePath = null;
+            RefreshGrid();
+            RefreshSelectors();
+            SelectFromGrid(updatedProduct.Id);
         }
 
         #endregion
@@ -436,15 +581,10 @@ namespace Eco_Matic_Winforms
             {
                 _selectedImagePath = dlgOpenImage.FileName;
                 lblImagePath.Text = Path.GetFileName(_selectedImagePath);
-                if (picImagePreview.Image != null) picImagePreview.Image.Dispose();
-                try
+                LoadPreviewImage(_selectedImagePath);
+
+                if (picImagePreview.Image == null)
                 {
-                    using var stream = new FileStream(_selectedImagePath, FileMode.Open, FileAccess.Read);
-                    picImagePreview.Image = Image.FromStream(stream);
-                }
-                catch
-                {
-                    picImagePreview.Image = null;
                     lblImagePath.Text = "Invalid image";
                     _selectedImagePath = null;
                 }
