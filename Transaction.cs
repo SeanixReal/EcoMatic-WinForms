@@ -40,6 +40,8 @@ namespace Eco_Matic_Winforms
 		public List<RecycleEntry> RecycledItems { get; set; } = new();
 		public decimal TotalAmount { get; set; }
 		public decimal AmountPaid { get; set; }
+		public decimal CashPaid { get; set; }
+		public int PointsUsed { get; set; }
 		public decimal Change { get; set; }
 	}
 }

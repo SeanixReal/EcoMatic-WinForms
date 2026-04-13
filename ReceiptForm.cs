@@ -58,8 +58,26 @@ namespace Eco_Matic_Winforms
                 y += 24;
             }
 
+            if (_transaction.PointsUsed > 0)
+            {
+                string unit = _transaction.PointsUsed == 1 ? "point" : "points";
+                string line = $"Points used: {_transaction.PointsUsed} {unit} (₱{_transaction.PointsUsed:F2})";
+                var lbl = new Label
+                {
+                    Text = line,
+                    Font = new Font("Consolas", 10, FontStyle.Bold),
+                    ForeColor = Color.FromArgb(30, 64, 175),
+                    AutoSize = false,
+                    Size = new Size(330, 22),
+                    Location = new Point(5, y)
+                };
+                itemsPanel.Controls.Add(lbl);
+                y += 24;
+            }
+
             lblTotal.Text = $"Total:  ₱{_transaction.TotalAmount:F2}";
-            lblPaid.Text = $"Paid:   ₱{_transaction.AmountPaid:F2}";
+            decimal cashPaid = _transaction.CashPaid > 0m ? _transaction.CashPaid : _transaction.AmountPaid;
+            lblPaid.Text = $"Paid:   ₱{cashPaid:F2}";
             lblChange.Text = $"Change: ₱{_transaction.Change:F2}";
         }
     }

@@ -385,6 +385,8 @@ namespace Eco_Matic_Winforms
                 Date = DateTime.Now,
                 TotalAmount = product.Price,
                 AmountPaid = product.Price,
+                CashPaid = cashNeeded,
+                PointsUsed = (int)pointsUsedPeso,
                 Change = 0
             };
             transaction.Items.Add(new TransactionItem
