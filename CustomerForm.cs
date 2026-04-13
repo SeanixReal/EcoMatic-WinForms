@@ -287,10 +287,23 @@ namespace Eco_Matic_Winforms
                 return 0m;
             }
 
-            // Points are whole-peso units and can only cover whole-peso portions of a price.
+            // Default behavior spends whole-peso points and expects cash for centavos.
             decimal usablePointPeso = Math.Min(Math.Floor(price), totalPoints);
             decimal cashNeeded = price - usablePointPeso;
-            return _insertedMoney >= cashNeeded ? usablePointPeso : 0m;
+
+            if (_insertedMoney >= cashNeeded)
+            {
+                return usablePointPeso;
+            }
+
+            // If there is enough point balance, allow points to fully cover centavo-priced items.
+            int fullCoveragePoints = (int)Math.Ceiling(price);
+            if (totalPoints >= fullCoveragePoints)
+            {
+                return fullCoveragePoints;
+            }
+
+            return 0m;
         }
 
         private decimal GetTotalPurchasingPower()
@@ -335,7 +348,7 @@ namespace Eco_Matic_Winforms
             if (product == null || product.Stock <= 0) return;
 
             decimal pointsUsedPeso = GetSpendablePointPeso(product.Price);
-            decimal cashNeeded = product.Price - pointsUsedPeso;
+            decimal cashNeeded = Math.Max(0m, product.Price - pointsUsedPeso);
 
             if (_insertedMoney < cashNeeded)
             {
