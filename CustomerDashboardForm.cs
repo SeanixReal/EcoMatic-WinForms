@@ -16,16 +16,14 @@ namespace Eco_Matic_Winforms
             DataStore.SetActiveCustomer(_rfid);
 
             var info = DataStore.GetCustomerInfo(_rfid);
-            int finalBalance = info.EcoCredits;
 
             if (DataStore.PendingPoints > 0)
             {
                 int pointsToSave = DataStore.PendingPoints;
-                int updatedBalance = finalBalance + pointsToSave;
+                int updatedBalance = info.EcoCredits + pointsToSave;
 
                 if (DataStore.UpdateCustomerCredits(_rfid, updatedBalance))
                 {
-                    finalBalance = updatedBalance;
                     DataStore.LogEvent("POINTS_SAVED", $"{pointsToSave} points saved via RFID ({_rfid})", pointsToSave);
                     MessageBox.Show($"Saved {pointsToSave} points to this RFID account.", "Points Saved",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -38,9 +36,12 @@ namespace Eco_Matic_Winforms
                 }
             }
 
+            // Re-read from storage so the UI always reflects the latest saved total.
+            var refreshedInfo = DataStore.GetCustomerInfo(_rfid);
+
             lblRfidValue.Text = _rfid;
-            lblEmailValue.Text = string.IsNullOrWhiteSpace(info.Email) ? "Guest" : info.Email;
-            lblPointsValue.Text = finalBalance.ToString();
+            lblEmailValue.Text = string.IsNullOrWhiteSpace(refreshedInfo.Email) ? "Guest" : refreshedInfo.Email;
+            lblPointsValue.Text = refreshedInfo.EcoCredits.ToString();
         }
 
         private void btnClose_Click(object sender, EventArgs e)

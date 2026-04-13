@@ -4,7 +4,7 @@ namespace Eco_Matic_Winforms
     {
         private readonly List<RecycleEntry> _recycleEntries = new();
         private decimal _insertedMoney = 0;
-        private readonly string? _activeRfid;
+        private string? _activeRfid;
         private int _cardPointsBalance;
 
         // Slot lookup
@@ -42,11 +42,11 @@ namespace Eco_Matic_Winforms
         {
             InitializeComponent();
             _activeRfid = string.IsNullOrWhiteSpace(activeRfid) ? null : activeRfid;
-            LoadCardBalance();
             ApplyLightTheme();
             InitializeSlots();
             InitializeSelectors();
             RefreshProducts();
+            SyncSessionCustomerPoints();
             UpdateMoneyDisplay();
 
             this.Size = new Size(1080, 940);
@@ -59,6 +59,7 @@ namespace Eco_Matic_Winforms
             // Center machine body when form loads
             this.Load += (s, e) => CenterMachineBody();
             this.Resize += (s, e) => CenterMachineBody();
+            this.Activated += (s, e) => SyncSessionCustomerPoints();
         }
 
         #region ── Initialization ──
@@ -131,6 +132,19 @@ namespace Eco_Matic_Winforms
 
             var info = DataStore.GetCustomerInfo(_activeRfid);
             _cardPointsBalance = Math.Max(0, info.EcoCredits);
+        }
+
+        public void SyncSessionCustomerPoints()
+        {
+            string? currentSessionRfid = string.IsNullOrWhiteSpace(DataStore.ActiveCustomerRfid)
+                ? null
+                : DataStore.ActiveCustomerRfid;
+
+            // Prefer the currently scanned session RFID; otherwise keep the original RFID for this form.
+            _activeRfid = currentSessionRfid ?? _activeRfid;
+            LoadCardBalance();
+            UpdateMoneyDisplay();
+            UpdateAllButtonStates();
         }
 
         private void CenterMachineBody()
@@ -259,22 +273,28 @@ namespace Eco_Matic_Winforms
             }
         }
 
-        private decimal GetSpendableCardPeso(decimal price)
+        private int GetTotalAvailablePoints()
         {
-            if (_cardPointsBalance <= 0)
+            return Math.Max(0, _cardPointsBalance) + Math.Max(0, DataStore.PendingPoints);
+        }
+
+        private decimal GetSpendablePointPeso(decimal price)
+        {
+            int totalPoints = GetTotalAvailablePoints();
+            if (totalPoints <= 0)
             {
                 return 0m;
             }
 
-            // Card points are whole-peso units and can only cover whole-peso portions of a price.
-            decimal usableCardPeso = Math.Min(Math.Floor(price), _cardPointsBalance);
-            decimal cashNeeded = price - usableCardPeso;
-            return _insertedMoney >= cashNeeded ? usableCardPeso : 0m;
+            // Points are whole-peso units and can only cover whole-peso portions of a price.
+            decimal usablePointPeso = Math.Min(Math.Floor(price), totalPoints);
+            decimal cashNeeded = price - usablePointPeso;
+            return _insertedMoney >= cashNeeded ? usablePointPeso : 0m;
         }
 
         private decimal GetTotalPurchasingPower()
         {
-            return _insertedMoney + _cardPointsBalance;
+            return _insertedMoney + GetTotalAvailablePoints();
         }
 
         private static void LoadSlotImage(SlotControls slot, Product product)
@@ -308,11 +328,13 @@ namespace Eco_Matic_Winforms
             if (_isDispensing) return;
             if (sender is not Button btn || btn.Tag is not int slotId) return;
 
+            SyncSessionCustomerPoints();
+
             var product = DataStore.Products.FirstOrDefault(p => p.Id == slotId);
             if (product == null || product.Stock <= 0) return;
 
-            decimal cardUsed = GetSpendableCardPeso(product.Price);
-            decimal cashNeeded = product.Price - cardUsed;
+            decimal pointsUsedPeso = GetSpendablePointPeso(product.Price);
+            decimal cashNeeded = product.Price - pointsUsedPeso;
 
             if (_insertedMoney < cashNeeded)
             {
@@ -320,21 +342,35 @@ namespace Eco_Matic_Winforms
                 return;
             }
 
-            if (cardUsed > 0m)
+            if (pointsUsedPeso > 0m)
             {
-                int pointsToSpend = (int)cardUsed;
-                if (string.IsNullOrWhiteSpace(_activeRfid) || !DataStore.TrySpendCustomerCredits(_activeRfid, pointsToSpend))
+                int pointsToSpend = (int)pointsUsedPeso;
+                int pointsFromPending = Math.Min(Math.Max(0, DataStore.PendingPoints), pointsToSpend);
+                int pointsFromCard = pointsToSpend - pointsFromPending;
+
+                if (pointsFromCard > 0)
                 {
-                    LoadCardBalance();
-                    UpdateMoneyDisplay();
-                    UpdateAllButtonStates();
-                    MessageBox.Show("Card points were updated elsewhere. Please try again.",
-                        "RFID Balance Updated", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    if (string.IsNullOrWhiteSpace(_activeRfid) || !DataStore.TrySpendCustomerCredits(_activeRfid, pointsFromCard))
+                    {
+                        LoadCardBalance();
+                        UpdateMoneyDisplay();
+                        UpdateAllButtonStates();
+                        MessageBox.Show("Points were updated elsewhere. Please try again.",
+                            "Balance Updated", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    _cardPointsBalance -= pointsFromCard;
                 }
 
-                _cardPointsBalance -= pointsToSpend;
-                DataStore.LogEvent("RFID_POINTS_SPENT", $"{pointsToSpend} points used for {product.Name} ({_activeRfid})", pointsToSpend);
+                if (pointsFromPending > 0)
+                {
+                    DataStore.PendingPoints = Math.Max(0, DataStore.PendingPoints - pointsFromPending);
+                }
+
+                DataStore.LogEvent("POINTS_SPENT",
+                    $"{pointsToSpend} points used for {product.Name} (card {pointsFromCard}, pending {pointsFromPending})",
+                    pointsToSpend);
             }
 
             // == Dispense the item ==
@@ -363,7 +399,7 @@ namespace Eco_Matic_Winforms
 
             DataStore.Transactions.Add(transaction);
             DataStore.LastTransaction = transaction;
-            DataStore.LogEvent("PURCHASE", $"1x {product.Name} (cash ₱{cashNeeded:F2}, card {cardUsed:F0} pts)", product.Price);
+            DataStore.LogEvent("PURCHASE", $"1x {product.Name} (cash ₱{cashNeeded:F2}, points {pointsUsedPeso:F0})", product.Price);
             DataStore.RecordSale(product);
 
             // Start dispense animation
@@ -529,15 +565,9 @@ namespace Eco_Matic_Winforms
         private void UpdateMoneyDisplay()
         {
             lblMoneyLabel.Text = "CASH / POINTS:";
-
-            if (!string.IsNullOrWhiteSpace(_activeRfid))
-            {
-                lblMoneyAmount.Text = $"₱{_insertedMoney:F2} | C:{_cardPointsBalance} S:{DataStore.PendingPoints}";
-            }
-            else
-            {
-                lblMoneyAmount.Text = $"₱{_insertedMoney:F2} | S:{DataStore.PendingPoints}";
-            }
+            int totalPoints = GetTotalAvailablePoints();
+            string pointUnit = totalPoints == 1 ? "point" : "points";
+            lblMoneyAmount.Text = $"₱{_insertedMoney:F2} | {totalPoints} {pointUnit}";
         }
 
         #endregion
@@ -561,7 +591,8 @@ namespace Eco_Matic_Winforms
                 existing.Pieces += pieces;
 
             DataStore.LogEvent("RECYCLE", $"{pieces} pc(s) {material}", points);
-            lblRecycleStatus.Text = $"+{points} PTS";
+            string pointUnit = points == 1 ? "point" : "points";
+            lblRecycleStatus.Text = $"+{points} {pointUnit}";
             UpdateMoneyDisplay();
             UpdateAllButtonStates();
         }

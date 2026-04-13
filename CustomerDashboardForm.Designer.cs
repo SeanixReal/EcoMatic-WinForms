@@ -86,7 +86,7 @@ namespace Eco_Matic_Winforms
             lblPoints.Name = "lblPoints";
             lblPoints.Size = new Size(70, 15);
             lblPoints.TabIndex = 5;
-            lblPoints.Text = "Eco-Points:";
+            lblPoints.Text = "Points:";
             // 
             // lblPointsValue
             // 

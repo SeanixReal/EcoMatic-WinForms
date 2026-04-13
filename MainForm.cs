@@ -7,6 +7,7 @@ namespace Eco_Matic_Winforms
         private const string AdminPassword = "admin123";
         private readonly Data.ArduinoService _arduino;
         private bool _isHandlingScan;
+        private CustomerForm? _customerForm;
 
         public MainForm()
         {
@@ -43,15 +44,16 @@ namespace Eco_Matic_Winforms
         {
             this.Hide();
             _arduino.SendStateCommand("STATE:ACTIVE");
-            var customerForm = new CustomerForm(DataStore.ActiveCustomerRfid);
-            customerForm.FormClosed += (s, args) =>
+            _customerForm = new CustomerForm(DataStore.ActiveCustomerRfid);
+            _customerForm.FormClosed += (s, args) =>
             {
                 _arduino.SendStateCommand("STATE:AFK");
                 DataStore.ClearActiveCustomer();
+                _customerForm = null;
                 this.Show();
                 UpdateExitButton();
             };
-            customerForm.Show();
+            _customerForm.Show();
         }
 
         private void btnAdmin_Click(object sender, EventArgs e)
@@ -113,6 +115,7 @@ namespace Eco_Matic_Winforms
                             DataStore.SetActiveCustomer(rfid);
                             using var dashboard = new CustomerDashboardForm(rfid);
                             dashboard.ShowDialog(this);
+                            _customerForm?.SyncSessionCustomerPoints();
                         }
                         else
                         {
@@ -123,10 +126,12 @@ namespace Eco_Matic_Winforms
                                 DataStore.SetActiveCustomer(rfid);
                                 using var dashboard = new CustomerDashboardForm(rfid);
                                 dashboard.ShowDialog(this);
+                                _customerForm?.SyncSessionCustomerPoints();
                             }
                             else
                             {
                                 DataStore.ClearActiveCustomer();
+                                _customerForm?.SyncSessionCustomerPoints();
                             }
                         }
 
